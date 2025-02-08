@@ -1,0 +1,30 @@
+import { getProjects } from '@/actions';
+import { Cards, TitleAnimation } from '@/components';
+
+import { Divider } from '@heroui/react';
+import React from 'react';
+
+export default async function Projects() {
+  const projects = await getProjects();
+  if (!projects) return null;
+  return (
+    <div className=' mx-auto '>
+      <div className='flex justify-center'>
+        <TitleAnimation title='Proyectos' />
+      </div>
+      <Divider className='my-4' />
+      <div className='flex justify-center'>
+        <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 gap-y-9 w-full z-10'>
+          {projects.map((project, index) => (
+            <Cards
+              key={index}
+              title={project.title}
+              urlImage={project.mainImage}
+              url={project.url}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
