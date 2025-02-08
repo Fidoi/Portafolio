@@ -1,13 +1,8 @@
 import { Resend } from 'resend';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 const resend = new Resend(process.env.RESEND_API_KEY as string);
-
-const fromEmailEnv = process.env.FROM_EMAIL;
-if (!fromEmailEnv) {
-  throw new Error('FROM_EMAIL environment variable is not defined');
-}
-const fromEmail: string = fromEmailEnv;
+const fromEmail = process.env.FROM_EMAIL as string;
 
 export async function POST(req: NextRequest) {
   const { email, subject, message } = await req.json();
@@ -30,17 +25,19 @@ export async function POST(req: NextRequest) {
           <p>{message}</p>
         </>
       ),
+      replyTo: email,
     });
 
     if (error) {
       console.error({ error });
-      return Response.json({ error }, { status: 422 });
+      return NextResponse.json({ error }, { status: 422 });
     }
 
-    return Response.json(data);
+    return NextResponse.json(data);
   } catch (err: unknown) {
     console.error(err);
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-    return Response.json({ error: errorMessage }, { status: 500 });
+    const errorMessage =
+      err instanceof Error ? err.message : 'Error inesperado';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
