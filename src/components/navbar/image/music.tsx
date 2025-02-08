@@ -39,6 +39,7 @@ const PLAYLIST = [
   { id: 'Fl0YWLT6iFE', title: 'METAMORPHOSIS 2' },
   { id: '317RHaFF7Xk', title: 'METAMORPHOSIS' },
   { id: 'b95JTn8j7cM', title: 'RAPTURE' },
+  { id: 'q0Kxangw3-w', title: 'Bonetrousle - UNDERTALE' },
 ];
 
 export const ImageAudio = () => {

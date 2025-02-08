@@ -122,7 +122,6 @@ export const EmailForm = () => {
             <form className='flex flex-col gap-5' onSubmit={handleSubmit}>
               <div className='flex flex-shrink gap-5'>
                 <Input
-                  isClearable
                   isRequired
                   name='email'
                   type='email'
@@ -134,7 +133,6 @@ export const EmailForm = () => {
                 />
                 <Input
                   name='subject'
-                  isClearable
                   type='text'
                   label='Nombre'
                   id='subject'

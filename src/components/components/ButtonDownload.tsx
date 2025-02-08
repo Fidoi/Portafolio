@@ -1,6 +1,5 @@
 'use client';
-import { Button } from '@heroui/react';
-import Link from 'next/link';
+import { Button, Link } from '@heroui/react';
 
 interface Props {
   text?: string;
@@ -15,6 +14,7 @@ export const ButtonDownload = ({ text, url }: Props) => {
       color='secondary'
       as={Link}
       href={url}
+      isExternal
     >
       {text}
     </Button>
