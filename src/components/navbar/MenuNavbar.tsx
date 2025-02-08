@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 import { ImageAudio } from './image/music';
 import { ThemeSwitcher } from './ThemeSwitcher';
+import { DropDown } from './dropdown/DropDown';
 
 export const MenuNavbar = () => {
   return (
@@ -13,10 +14,13 @@ export const MenuNavbar = () => {
         height={'5rem'}
         className='flex justify-between items-center fixed'
       >
-        <NavbarContent>
+        <NavbarContent justify='start'>
           <ImageAudio />
         </NavbarContent>
-        <NavbarContent className='hidden sm:flex gap-4' justify='center'>
+        <NavbarContent className='sm:hidden' justify='center'>
+          <DropDown />
+        </NavbarContent>
+        <NavbarContent className='hidden sm:flex' justify='center'>
           <NavbarItem>
             <Link color='foreground' href='/'>
               Inicio
@@ -42,9 +46,7 @@ export const MenuNavbar = () => {
             </Link>
           </NavbarItem>
         </NavbarContent>
-        <NavbarContent justify='end'>
-          <NavbarItem className='hidden lg:flex'></NavbarItem>
-        </NavbarContent>
+        <NavbarContent justify='end'></NavbarContent>
         <ThemeSwitcher />
       </Navbar>
     </nav>
