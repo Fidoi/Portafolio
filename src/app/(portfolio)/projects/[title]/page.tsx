@@ -3,8 +3,29 @@ import { SwiperImages, CardsInfo, TitleAnimation } from '@/components';
 import { Divider } from '@heroui/react';
 import { notFound } from 'next/navigation';
 
+import { Metadata, ResolvingMetadata } from 'next';
+
 interface Props {
   params: Promise<{ title: string }>;
+}
+
+export async function generateMetadata(
+  { params }: Props,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { title } = await params;
+  const product = await getProductByTitle(title);
+
+  return {
+    title: product?.title ?? 'Producto no encontrado',
+    description: product?.mainInfo.commentary ?? '',
+    openGraph: {
+      title: product?.title ?? 'Producto no encontrado',
+      description: product?.mainInfo.commentary ?? '',
+      images: [`${product?.mainImage}`],
+    },
+  };
 }
 
 export default async function ProjectPage({ params }: Props) {

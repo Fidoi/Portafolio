@@ -2,7 +2,12 @@ import { getProjects } from '@/actions';
 import { Cards, TitleAnimation } from '@/components';
 
 import { Divider } from '@heroui/react';
-import React from 'react';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Proyectos',
+  description: 'Portafolio',
+};
 
 export default async function Projects() {
   const projects = await getProjects();
