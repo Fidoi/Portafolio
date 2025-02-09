@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function portfolio() {
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-12'>
+    <div className='grid grid-cols-1 sm:grid-cols-12 '>
       <div className='col-span-8 place-self-center sm:text-left justify-self-start text-center '>
         <h1 className='mb-4 text-4xl sm:text-6xl lg:text-8xl font-semibold tracking-tight inline'>
           <span className='text-transparen bg-clip-text'>Hola soy {''}</span>
@@ -26,13 +26,13 @@ export default function portfolio() {
           </Link>
           <ButtonDownload
             url={
-              'https://firebasestorage.googleapis.com/v0/b/desarrollo-5753a.appspot.com/o/FULLSTACK%20CV.pdf?alt=media&token=f9994961-bab7-481a-adbe-96a3cc8f8343'
+              'https://firebasestorage.googleapis.com/v0/b/desarrollo-5753a.appspot.com/o/CV.pdf?alt=media&token=55f5ff6f-1972-4751-b46f-03fbfb29a487'
             }
             text={'Descargar CV'}
           />
         </div>
       </div>
-      <div className='col-span-4 justify-self-end'>
+      <div className='col-span-4 justify-self-end '>
         <ImageManager />
       </div>
     </div>
