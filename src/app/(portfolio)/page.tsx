@@ -31,7 +31,7 @@ export default function Portfolio() {
           </Link>
           <ButtonDownload
             url={
-              'https://firebasestorage.googleapis.com/v0/b/desarrollo-5753a.appspot.com/o/CV.pdf?alt=media&token=55f5ff6f-1972-4751-b46f-03fbfb29a487'
+              'https://firebasestorage.googleapis.com/v0/b/desarrollo-5753a.appspot.com/o/CV.pdf?alt=media&token=135decf7-35c9-474d-ad39-300f44d8884c'
             }
             text={'Descargar CV'}
           />
