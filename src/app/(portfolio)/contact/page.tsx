@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function Contact() {
   return (
     <div className='flex flex-col justify-center items-center'>
-      <TitleAnimation title='Contacto' />
+      <TitleAnimation title='Contacto' className='text-6xl' />
       <EmailForm />
     </div>
   );

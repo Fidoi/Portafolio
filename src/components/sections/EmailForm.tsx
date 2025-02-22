@@ -85,12 +85,12 @@ export const EmailForm = () => {
 
   return (
     <>
-      <div className='flex flex-col items-center'>
+      <div className='flex flex-col items-center justify-center'>
         <RowSteps
           color={currentStep === 3 ? 'success' : 'primary'}
           currentStep={currentStep}
           defaultStep={0}
-          className='flex flex-col sm:flex-row'
+          className='flex flex-col sm:flex-row md:ml-14 sm:ml-0'
           onStepChange={handleStepChange}
           steps={[
             { title: 'Inicio' },
@@ -100,7 +100,7 @@ export const EmailForm = () => {
         />
 
         <Card
-          className='grid md:grid-cols-2 my-12 py-24 gap-4 relative px-3 bg-opacity-95 md:max-w-[900px] md:max-h-[450px]'
+          className='flex flex-col sm:flex-row my-12 py-10 gap-4 relative px-3 bg-opacity-95 md:max-w-[900px] md:max-h-[450px]'
           id='contact'
         >
           <div className='flex flex-col justify-center items-center'>
