@@ -28,6 +28,13 @@ export default {
             primary: {
               foreground: '#FFFFFF',
               DEFAULT: '#9353d3',
+              '50': '#212121',
+              '100': '#ea2845',
+              '200': '#092e20',
+              '300': '#007acc',
+              '400': '#C4841D',
+              '500': '#f59e0b',
+              '600': '#9333ea',
             },
             secondary: {
               foreground: '#FFFFFF',
@@ -35,7 +42,7 @@ export default {
             },
             warning: {
               foreground: '#006FEE',
-              DEFAULT: '#18181b',
+              DEFAULT: '#004493',
             },
             success: {
               foreground: '#FFFFFF',
@@ -50,10 +57,21 @@ export default {
             primary: {
               foreground: '#FFFFFF',
               DEFAULT: '#006FEE',
+              '50': '#005BC4',
+              '100': '#ff4c61',
+              '200': '#1db954',
+              '300': '#66b3ff',
+              '400': '#FACC15',
+              '500': '#FDBA74',
+              '600': '#8f250b',
             },
             secondary: {
               foreground: '#FFFFFF',
               DEFAULT: '#A2E9C1',
+            },
+            warning: {
+              foreground: '#006FEE',
+              DEFAULT: '#09AACD',
             },
           },
         },

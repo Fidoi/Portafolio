@@ -15,7 +15,7 @@ export default async function Projects() {
   return (
     <div className=' mx-auto '>
       <div className='flex justify-center'>
-        <TitleAnimation title='Proyectos' />
+        <TitleAnimation title='Proyectos' className='text-6xl' />
       </div>
       <Divider className='my-4' />
       <div className='flex justify-center'>

@@ -39,7 +39,7 @@ export default async function ProjectPage({ params }: Props) {
   return (
     <main className='p-8 '>
       <div className='flex justify-center mb-5'>
-        <TitleAnimation title={project.title} />
+        <TitleAnimation title={project.title} className='text-6xl' />
       </div>
 
       <SwiperImages images={project.mainInfo?.urlImages} />

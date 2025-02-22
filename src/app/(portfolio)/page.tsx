@@ -1,21 +1,26 @@
-import { ButtonDownload, ImageManager, TypeAnimations } from '@/components';
+import {
+  ButtonDownload,
+  Chart,
+  ImageManager,
+  TypeAnimations,
+} from '@/components';
 import Link from 'next/link';
 
-export default function portfolio() {
+export default function Portfolio() {
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-12 '>
+    <div className='grid grid-cols-1 sm:grid-cols-12 gap-5'>
       <div className='col-span-8 place-self-center sm:text-left justify-self-start text-center '>
         <h1 className='mb-4 text-4xl sm:text-6xl lg:text-8xl font-semibold tracking-tight inline'>
-          <span className='text-transparen bg-clip-text'>Hola soy {''}</span>
+          <span className='text-transparen bg-clip-text'>Hola soy </span>
           <br></br>
 
           <TypeAnimations />
         </h1>
-        <p className='text-lg lg:text-xl mt-5'>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rem
-          exercitationem, deleniti dolorum inventore pariatur facere
-          necessitatibus molestiae non sapiente nesciunt error in nobis unde
-          numquam possimus harum mollitia ad perspiciatis?
+        <p className='text-lg lg:text-2xl mt-5'>
+          Soy un desarrollador fullstack con 1 año y medio de experiencia en
+          Next.js. He trabajado en varios proyectos personales, creando y
+          consumiendo APIs, lo que me ha permitido fortalecer mis habilidades en
+          el desarrollo web de extremo a extremo.<br></br> Revisa mis proyectos!
         </p>
         <div className='mt-5'>
           <Link
@@ -31,9 +36,18 @@ export default function portfolio() {
             text={'Descargar CV'}
           />
         </div>
+        <div className='flex items-center justify-center md:items-start mt-6'>
+          <Chart />
+        </div>
       </div>
-      <div className='col-span-4 justify-self-end '>
+      <div className='col-span-4 justify-center items-center '>
         <ImageManager />
+        <h1 className='flex items-center justify-center'>
+          <em>
+            Mis hobbies son dibujar, hacer ejercicio y jugar <br></br>PD: Este
+            lo hice solo con el mouse 😈
+          </em>
+        </h1>
       </div>
     </div>
   );

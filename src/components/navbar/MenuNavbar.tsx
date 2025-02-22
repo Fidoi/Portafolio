@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ImageAudio } from './image/music';
 import { ThemeSwitcher } from './ThemeSwitcher';
 import { DropDown } from './dropdown/DropDown';
+import { TitleAnimation } from '../ui/titles/titleAnimation';
 
 export const MenuNavbar = () => {
   return (
@@ -22,7 +23,7 @@ export const MenuNavbar = () => {
       <NavbarContent className='hidden sm:flex' justify='center'>
         <NavbarItem>
           <Link color='foreground' href='/'>
-            Inicio
+            <TitleAnimation title='Inicio' className='text-2xl' />
           </Link>
         </NavbarItem>
         <NavbarItem isActive>
@@ -32,7 +33,7 @@ export const MenuNavbar = () => {
             href='/projects'
             className='text-primary'
           >
-            Proyectos
+            <TitleAnimation title='Proyectos' className='text-2xl' />
           </Link>
         </NavbarItem>
         <NavbarItem isActive={false}>
@@ -41,7 +42,7 @@ export const MenuNavbar = () => {
             href='#'
             className='pointer-events-none cursor-default opacity-50'
           >
-            Integraciones
+            <TitleAnimation title='Integraciones' className='text-2xl' />
           </Link>
         </NavbarItem>
       </NavbarContent>

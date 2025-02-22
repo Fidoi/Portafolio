@@ -4,9 +4,10 @@ import gsap from 'gsap';
 
 interface Props {
   title: string;
+  className?: string;
 }
 
-export const TitleAnimation = ({ title }: Props) => {
+export const TitleAnimation = ({ title, className }: Props) => {
   const titleRef = useRef(null);
 
   useEffect(() => {
@@ -18,7 +19,7 @@ export const TitleAnimation = ({ title }: Props) => {
   }, []);
 
   return (
-    <h1 ref={titleRef} className='text-6xl font-bold'>
+    <h1 ref={titleRef} className={` font-bold ${className}`}>
       {title}
     </h1>
   );

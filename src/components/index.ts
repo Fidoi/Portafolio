@@ -14,3 +14,4 @@ export * from './sections/projects/Swiper-Images';
 
 export * from './components/ButtonDownload';
 export * from './components/ImageManager';
+export * from './components/Chart';

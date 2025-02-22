@@ -11,7 +11,7 @@ export default function LayoutMain({
     <>
       <Providers>
         <MenuNavbar />
-        <div className='container mt-24 mx-auto px-4  lg:px-12 z-10 '>
+        <div className='container mt-24 mx-auto px-4  lg:px-12 lg:py-6 z-10 '>
           {children}
         </div>
         <BackgroundParticles />
