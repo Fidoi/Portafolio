@@ -132,6 +132,7 @@ export const Chart = () => {
             delay: index * 0.1,
           }}
           style={{ gridArea: '1 / 1 / 2 / 2' }}
+          className='w-96 h-98'
         >
           <CircleChartCard {...item} />
         </motion.div>
@@ -152,7 +153,7 @@ const CircleChartCard = React.forwardRef<
     <Card
       ref={ref}
       className={cn(
-        `min-h-[240px] max-w-[250px]: md:max-w-[clamp(150px,15vw,300px)] border border-default-200 dark:border-default-100`,
+        `min-h-[240px] max-w-[250px]: md:max-w-[clamp(150px,15vw,300px)]  md:max-h-[clamp(150px,15vw,300px)] border border-default-200 dark:border-default-100`,
         className
       )}
       {...props}

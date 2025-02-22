@@ -36,7 +36,7 @@ export default function Portfolio() {
             text={'Descargar CV'}
           />
         </div>
-        <div className='flex md:items-start mt-6'>
+        <div className='flex md:items-start mt-6 sm:items-center sm:justify-center'>
           <Chart />
         </div>
       </div>
