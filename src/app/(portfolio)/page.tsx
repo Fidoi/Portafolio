@@ -16,7 +16,7 @@ export default function Portfolio() {
 
           <TypeAnimations />
         </h1>
-        <p className='text-lg lg:text-2xl mt-5'>
+        <p className='lg:text-2xl mt-5 sm:max-w-[400px] lg:max-w-[900px]'>
           Soy un desarrollador fullstack con 1 año y medio de experiencia en
           Next.js. He trabajado en varios proyectos personales, creando y
           consumiendo APIs, lo que me ha permitido fortalecer mis habilidades en
@@ -36,7 +36,7 @@ export default function Portfolio() {
             text={'Descargar CV'}
           />
         </div>
-        <div className='flex md:items-start mt-6 sm:items-center sm:justify-center'>
+        <div className='md:items-start mt-6 sm:items-center sm:justify-center'>
           <Chart />
         </div>
       </div>
