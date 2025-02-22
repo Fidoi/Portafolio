@@ -100,10 +100,8 @@ export const Chart = () => {
   const closedOffsets = { marginLeft: -9, marginTop: 10 };
   const openOffsets = { marginLeft: 325, marginTop: 325 };
 
-  const containerClass = 'grid';
-
   return (
-    <div onClick={handleToggle} className={`${containerClass} cursor-pointer`}>
+    <div onClick={handleToggle} className={`grid cursor-pointer`}>
       {data.map((item, index) => (
         <motion.div
           key={index}
@@ -118,7 +116,8 @@ export const Chart = () => {
                 }
               : {
                   marginLeft: isOpen
-                    ? index * openOffsets.marginLeft
+                    ? (index * openOffsets.marginLeft * window.innerWidth) /
+                      1920
                     : index * closedOffsets.marginLeft,
                 }
           }
@@ -133,7 +132,6 @@ export const Chart = () => {
             delay: index * 0.1,
           }}
           style={{ gridArea: '1 / 1 / 2 / 2' }}
-          className='w-72 h-80'
         >
           <CircleChartCard {...item} />
         </motion.div>
@@ -154,7 +152,7 @@ const CircleChartCard = React.forwardRef<
     <Card
       ref={ref}
       className={cn(
-        'min-h-[240px] border border-default-200 dark:border-default-100',
+        `min-h-[240px] max-w-[250px]: md:max-w-[clamp(150px,15vw,300px)] border border-default-200 dark:border-default-100`,
         className
       )}
       {...props}

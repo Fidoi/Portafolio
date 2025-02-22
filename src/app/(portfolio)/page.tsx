@@ -36,7 +36,7 @@ export default function Portfolio() {
             text={'Descargar CV'}
           />
         </div>
-        <div className='flex items-center justify-center md:items-start mt-6'>
+        <div className='flex md:items-start mt-6'>
           <Chart />
         </div>
       </div>
@@ -44,8 +44,8 @@ export default function Portfolio() {
         <ImageManager />
         <h1 className='flex items-center justify-center'>
           <em>
-            Mis hobbies son dibujar, hacer ejercicio y jugar <br></br>PD: Este
-            lo hice solo con el mouse 😈
+            Mis hobbies son dibujar, hacer ejercicio y jugar <br></br>Nota: Este
+            lo hice con el mouse 😈
           </em>
         </h1>
       </div>
