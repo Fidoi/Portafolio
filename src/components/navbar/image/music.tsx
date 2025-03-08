@@ -36,6 +36,7 @@ declare global {
 }
 
 const PLAYLIST = [
+  { id: 'FKwVFWwA_x8', title: 'Duran Duran - INVISIBLE' },
   { id: 'cxKs2b5lRsA', title: 'Flashing Lights' },
   { id: 'Fl0YWLT6iFE', title: 'METAMORPHOSIS 2' },
   { id: '317RHaFF7Xk', title: 'METAMORPHOSIS' },

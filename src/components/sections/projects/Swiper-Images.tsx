@@ -36,8 +36,8 @@ export const SwiperImages = ({ images }: SwiperImagesProps) => {
         </SwiperSlide>
       ))}
 
-      <div className='swiper-button-next !text-primary-500 hover:!text-primary-700' />
-      <div className='swiper-button-prev !text-primary-500 hover:!text-primary-700' />
+      <div className='swiper-button-next !text-primary hover:!text-success' />
+      <div className='swiper-button-prev !text-primary hover:!text-success' />
     </Swiper>
   );
 };
