@@ -13,15 +13,15 @@ type Img = {
 
 const DEFAULT_IMAGES: Img[] = [
   {
-    src: "https://firebasestorage.googleapis.com/v0/b/desarrollo-5753a.appspot.com/o/mitaka_asa_ka.gif?alt=media&token=aeff2b74-79ef-4c15-bf3c-1f2930d110c2",
+    src: "https://res.cloudinary.com/dzftv7yux/image/upload/v1759378169/Editarperfils2025-10-2-0.48.672story-ezgif.com-optimize_npvyjl.gif",
     alt: "Mitaka_Asa",
   },
   {
-    src: "https://firebasestorage.googleapis.com/v0/b/desarrollo-5753a.appspot.com/o/Editarperfils2025-10-1-23.15.620story-ezgif.com-video-to-gif-converter.gif?alt=media&token=9296c19e-650c-4a99-a6da-e9a93162b02f",
+    src: "https://res.cloudinary.com/dzftv7yux/image/upload/v1759377415/Editarperfils2025-10-1-23.15.620story-ezgif.com-optimize_jfooje.gif",
     alt: "Mitaka_Asa_2",
   },
   {
-    src: "https://firebasestorage.googleapis.com/v0/b/desarrollo-5753a.appspot.com/o/Editarperfils2025-10-1-23.33.920story-ezgif.com-video-to-gif-converter.gif?alt=media&token=5bf6e0f6-6bb1-4ce1-af80-2de197996062",
+    src: "https://res.cloudinary.com/dzftv7yux/image/upload/v1759375343/Editarperfils2025-10-1-23.33.920story-ezgif.com-video-to-gif-converter_1_nagrel.gif",
     alt: "Pomni",
   },
 ];
@@ -40,8 +40,7 @@ export const ImageManager: React.FC<{ images?: Img[] }> = ({
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0 }}
         transition={{ type: "spring", stiffness: 120, damping: 14 }}
-        className="rounded-2xl overflow-hidden shadow-md bg-muted"
-        aria-live="polite"
+        className="rounded-2xl shadow-md bg-muted"
       >
         <Image
           src={active.src}
@@ -49,7 +48,7 @@ export const ImageManager: React.FC<{ images?: Img[] }> = ({
           width={active.width ?? 800}
           height={active.height ?? 600}
           isZoomed
-          isBlurred={false}
+          isBlurred
           className="object-cover w-full h-auto"
         />
       </motion.div>
@@ -86,8 +85,8 @@ export const ImageManager: React.FC<{ images?: Img[] }> = ({
                   width={150}
                   height={150}
                   className="object-cover w-full h-full"
-                  isZoomed={false}
-                  isBlurred={false}
+                  isZoomed
+                  isBlurred
                 />
               </motion.div>
             </button>

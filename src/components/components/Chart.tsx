@@ -158,7 +158,7 @@ const CircleChartCard = React.forwardRef<
         ` w-full
           h-full
           min-h-[240px]
-          md:min-h-[300px]
+          md:min-h-[240px]
           transition-all
           duration-500
           border border-default-200 dark:border-default-100`,
