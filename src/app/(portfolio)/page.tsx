@@ -3,49 +3,49 @@ import {
   Chart,
   ImageManager,
   TypeAnimations,
-} from '@/components';
-import Link from 'next/link';
+} from "@/components";
+import { ButtonComponent } from "@/components/components/ButtonComponent";
 
 export default function Portfolio() {
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-12 gap-5'>
-      <div className='col-span-8 place-self-center sm:text-left justify-self-start text-center '>
-        <h1 className='mb-4 text-4xl sm:text-6xl lg:text-8xl font-semibold tracking-tight inline'>
-          <span className='text-transparen bg-clip-text'>Hola soy </span>
-          <br></br>
-
+    <div className="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-12 gap-5 gap-y-10">
+      <div className="col-span-2 md:col-span-6 lg:col-span-8 grid gap-10 md:gap-8 lg:gap-5">
+        <h1 className="flex flex-col gap-2 text-7xl md:text-6xl lg:text-8xl font-semibold tracking-tight inline">
+          <span className="bg-clip-text">Hola soy </span>
           <TypeAnimations />
         </h1>
-        <p className='lg:text-2xl mt-5 sm:max-w-[400px] lg:max-w-[900px]'>
-          Soy un desarrollador fullstack con 1 año y medio de experiencia en
-          Next.js. He trabajado en varios proyectos personales, creando y
+        <p className="text-2xl ">
+          Soy un desarrollador fullstack con 2 años de experiencia en Next.js -
+          React. He trabajado en varios proyectos personales, creando y
           consumiendo APIs, lo que me ha permitido fortalecer mis habilidades en
           el desarrollo web de extremo a extremo.<br></br> Revisa mis proyectos!
         </p>
-        <div className='mt-5'>
-          <Link
-            href='/contact'
-            className='rounded-full px-6 py-3 mr-4 text-white bg-primary shadow-lg shadow-primary'
+        <div className="flex gap-4">
+          <ButtonComponent
+            url="/contact"
+            variant="shadow"
+            className="rounded-full"
           >
             Contacta
-          </Link>
+          </ButtonComponent>
+
           <ButtonDownload
             url={
-              'https://firebasestorage.googleapis.com/v0/b/desarrollo-5753a.appspot.com/o/CV.pdf?alt=media&token=135decf7-35c9-474d-ad39-300f44d8884c'
+              "https://firebasestorage.googleapis.com/v0/b/desarrollo-5753a.appspot.com/o/CV.pdf?alt=media&token=135decf7-35c9-474d-ad39-300f44d8884c"
             }
-            text={'Descargar CV'}
+            text={"Descargar CV"}
           />
         </div>
-        <div className='md:items-start mt-6 sm:items-center sm:justify-center'>
+        <div className="w-full">
           <Chart />
         </div>
       </div>
-      <div className='col-span-4 justify-center items-center '>
+      <div className="col-span-2 md:col-span-6 lg:col-span-4 flex flex-col items-center justify-center gap-5 text-center">
         <ImageManager />
-        <h1 className='flex items-center justify-center'>
+        <h1 className="flex items-center justify-center">
           <em>
-            Mis hobbies son dibujar, hacer ejercicio y jugar <br></br>Nota: Este
-            lo hice con el mouse 😈
+            Mis hobbies son dibujar, hacer ejercicio y jugar <br></br>Nota:
+            Algunos los hice con el mouse 😈
           </em>
         </h1>
       </div>
