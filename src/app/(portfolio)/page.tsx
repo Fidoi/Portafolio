@@ -10,11 +10,11 @@ export default function Portfolio() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-12 gap-5 gap-y-10">
       <div className="col-span-2 md:col-span-6 lg:col-span-8 grid gap-10 md:gap-8 lg:gap-5">
-        <h1 className="flex flex-col gap-2 text-7xl md:text-6xl lg:text-8xl font-semibold tracking-tight inline">
-          <span className="bg-clip-text">Hola soy </span>
+        <h1 className="flex flex-col gap-2 text-7xl lg:text-8xl font-semibold tracking-tight inline">
+          <span className="bg-clip-text ">Hola soy </span>
           <TypeAnimations />
         </h1>
-        <p className="text-2xl ">
+        <p className="text-3xl md:text-2xl">
           Soy un desarrollador fullstack con 2 años de experiencia en Next.js -
           React. He trabajado en varios proyectos personales, creando y
           consumiendo APIs, lo que me ha permitido fortalecer mis habilidades en
