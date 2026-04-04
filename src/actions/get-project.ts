@@ -1,7 +1,6 @@
-// get-project.ts
-'use server';
+"use server";
 
-import prisma from '@/lib/prisma';
+import prisma from "@/lib/prisma";
 
 export const getProductByTitle = async (title: string) => {
   try {
@@ -9,7 +8,7 @@ export const getProductByTitle = async (title: string) => {
       where: {
         title: {
           equals: title,
-          mode: 'insensitive',
+          mode: "insensitive",
         },
       },
       include: {
@@ -20,6 +19,6 @@ export const getProductByTitle = async (title: string) => {
     return product;
   } catch (error) {
     console.log(error);
-    throw new Error('Error al obtener producto por título');
+    throw new Error("Error al obtener producto por título");
   }
 };

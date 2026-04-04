@@ -22,7 +22,7 @@ export const SwiperImages = ({ images }: SwiperImagesProps) => {
         prevEl: ".swiper-button-prev",
       }}
       modules={[Autoplay, Pagination, Navigation]}
-      className="mySwiper bg-background-foreground/85 rounded-lg w-full"
+      className="mySwiper bg-background-foreground/85 rounded-lg w-2/3"
     >
       {images.map((image, index) => (
         <SwiperSlide key={index} className="flex justify-center items-center">

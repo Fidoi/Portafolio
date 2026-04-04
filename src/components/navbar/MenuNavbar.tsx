@@ -49,11 +49,15 @@ export const MenuNavbar = () => {
           </Link>
         </NavbarItem>
 
-        <NavbarItem isActive={false}>
+        <NavbarItem>
           <Link
             color="foreground"
-            href="#"
-            className="pointer-events-none cursor-default opacity-50"
+            href="/integrations"
+            className={`
+            ${pathname === "/integrations" ? "text-primary" : "text-foreground"} 
+            hover:text-primary-700 
+            transition-colors duration-500
+          `}
           >
             <TitleAnimation title="Integraciones" className="text-2xl" />
           </Link>

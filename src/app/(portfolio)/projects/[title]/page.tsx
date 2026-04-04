@@ -12,7 +12,7 @@ interface Props {
 export async function generateMetadata(
   { params }: Props,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  parent: ResolvingMetadata
+  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { title } = await params;
   const product = await getProductByTitle(title);
@@ -37,7 +37,7 @@ export default async function ProjectPage({ params }: Props) {
   }
 
   return (
-    <main className="flex flex-col gap-10">
+    <main className="flex flex-col gap-4">
       <div className="flex justify-center">
         <TitleAnimation title={project.title} className="text-6xl" />
       </div>
