@@ -19,7 +19,16 @@ type GeminiResponse = {
   };
 };
 
-function isQuotaError(status: number, body: GeminiResponse) {
+type GeminiThrownError = {
+  status?: number;
+  json?: GeminiResponse;
+};
+
+function isGeminiThrownError(err: unknown): err is GeminiThrownError {
+  return typeof err === "object" && err !== null;
+}
+
+function isQuotaError(status: number | undefined, body: GeminiResponse) {
   return (
     status === 429 ||
     status === 402 ||
@@ -58,7 +67,7 @@ async function callGemini(
   const json = (await res.json()) as GeminiResponse;
 
   if (!res.ok) {
-    throw { status: res.status, json };
+    throw { status: res.status, json } satisfies GeminiThrownError;
   }
 
   const text = json.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
@@ -76,9 +85,9 @@ export async function getChatResponse(messages: ChatMessage[]) {
 
   try {
     return await callGemini(primaryKey, systemPrompt, messages);
-  } catch (err: any) {
-    const status = err?.status;
-    const body = err?.json as GeminiResponse | undefined;
+  } catch (err: unknown) {
+    const status = isGeminiThrownError(err) ? err.status : undefined;
+    const body = isGeminiThrownError(err) ? err.json : undefined;
 
     if (isQuotaError(status, body ?? {})) {
       if (!fallbackKey) {
@@ -87,9 +96,9 @@ export async function getChatResponse(messages: ChatMessage[]) {
 
       try {
         return await callGemini(fallbackKey, systemPrompt, messages);
-      } catch (err2: any) {
-        const status2 = err2?.status;
-        const body2 = err2?.json as GeminiResponse | undefined;
+      } catch (err2: unknown) {
+        const status2 = isGeminiThrownError(err2) ? err2.status : undefined;
+        const body2 = isGeminiThrownError(err2) ? err2.json : undefined;
 
         if (isQuotaError(status2, body2 ?? {})) {
           return "😢 Se acabaron los usos gratuitos. La cuota diaria se repone aproximadamente a medianoche Pacific Time (≈ 2–3 AM hora local). ⏳";
