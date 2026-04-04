@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   Dropdown,
   DropdownTrigger,
@@ -7,7 +7,7 @@ import {
   Button,
   ButtonGroup,
   Slider,
-} from '@heroui/react';
+} from "@heroui/react";
 import {
   FaPlay,
   FaPause,
@@ -16,12 +16,12 @@ import {
   FaStepForward,
   FaStepBackward,
   FaRandom,
-} from 'react-icons/fa';
-import { useEffect, useRef, useState } from 'react';
-import YouTube, { YouTubePlayer } from 'react-youtube';
-import { ImageNavbar } from '../ImageNavbar';
-import VolumeSetting from './volume';
-import { motion } from 'framer-motion';
+} from "react-icons/fa";
+import { useEffect, useRef, useState } from "react";
+import YouTube, { YouTubePlayer } from "react-youtube";
+import { ImageNavbar } from "../ImageNavbar";
+import VolumeSetting from "./volume";
+import { motion } from "framer-motion";
 
 declare global {
   interface Window {
@@ -36,12 +36,15 @@ declare global {
 }
 
 const PLAYLIST = [
-  { id: 'FKwVFWwA_x8', title: 'Duran Duran - INVISIBLE' },
-  { id: 'cxKs2b5lRsA', title: 'Flashing Lights' },
-  { id: 'Fl0YWLT6iFE', title: 'METAMORPHOSIS 2' },
-  { id: '317RHaFF7Xk', title: 'METAMORPHOSIS' },
-  { id: 'b95JTn8j7cM', title: 'RAPTURE' },
-  { id: 'q0Kxangw3-w', title: 'Bonetrousle - UNDERTALE' },
+  { id: "FKwVFWwA_x8", title: "Duran Duran - INVISIBLE" },
+  { id: "cxKs2b5lRsA", title: "Flashing Lights" },
+  { id: "vjwaB2nT4h8", title: "Viliam Lane - particles" },
+  { id: "0PNaf6DkYHE", title: "Under Bright Lights" },
+  { id: "MxEjnYdfLXU", title: "I Wonder" },
+  { id: "Fl0YWLT6iFE", title: "METAMORPHOSIS 2" },
+  { id: "317RHaFF7Xk", title: "METAMORPHOSIS" },
+  { id: "b95JTn8j7cM", title: "RAPTURE" },
+  { id: "q0Kxangw3-w", title: "Bonetrousle - UNDERTALE" },
 ];
 
 export const ImageAudio = () => {
@@ -57,8 +60,8 @@ export const ImageAudio = () => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const opts = {
-    height: '0',
-    width: '0',
+    height: "0",
+    width: "0",
     playerVars: {
       autoplay: 0 as 0 | 1 | undefined,
       controls: 0 as 0 | 1 | undefined,
@@ -76,14 +79,14 @@ export const ImageAudio = () => {
     }
   };
 
-  const changeTrack = (direction: 'next' | 'prev') => {
+  const changeTrack = (direction: "next" | "prev") => {
     let newIndex = currentTrackIndex;
 
     if (shuffle) {
       newIndex = Math.floor(Math.random() * playlist.length);
     } else {
       newIndex =
-        direction === 'next'
+        direction === "next"
           ? (currentTrackIndex + 1) % playlist.length
           : (currentTrackIndex - 1 + playlist.length) % playlist.length;
     }
@@ -97,7 +100,7 @@ export const ImageAudio = () => {
       setCurrentTrackIndex(0);
     } else {
       const originalIndex = PLAYLIST.findIndex(
-        (track) => track.id === playlist[currentTrackIndex].id
+        (track) => track.id === playlist[currentTrackIndex].id,
       );
       setPlaylist(PLAYLIST);
       setCurrentTrackIndex(originalIndex);
@@ -117,7 +120,7 @@ export const ImageAudio = () => {
   }): Promise<void> => {
     if (event.data === window.YT.PlayerState.ENDED) {
       setTimeout(() => {
-        changeTrack('next');
+        changeTrack("next");
       }, 500);
     } else if (event.data === window.YT.PlayerState.PLAYING) {
       setIsPlaying(true);
@@ -180,14 +183,14 @@ export const ImageAudio = () => {
 
   const formatTime = (seconds: number) => {
     return `${Math.floor(seconds / 60)}:${String(
-      Math.floor(seconds % 60)
-    ).padStart(2, '0')}`;
+      Math.floor(seconds % 60),
+    ).padStart(2, "0")}`;
   };
   const currentThumbnail = `https://img.youtube.com/vi/${playlist[currentTrackIndex].id}/hqdefault.jpg`;
 
   return (
     <>
-      <div className='hidden'>
+      <div className="hidden">
         <YouTube
           videoId={PLAYLIST[0].id}
           opts={opts}
@@ -197,7 +200,7 @@ export const ImageAudio = () => {
       </div>
       <Dropdown>
         <DropdownTrigger>
-          <button className='cursor-pointer inline-block p-2 rounded-full border-2 border-transparent hover:border-blue-400 transition-all duration-300 focus:outline-none focus:ring-0'>
+          <button className="cursor-pointer inline-block p-2 rounded-full border-2 border-transparent hover:border-blue-400 transition-all duration-300 focus:outline-none focus:ring-0">
             <motion.div
               animate={{
                 scale: isPlaying ? [1, 1.05, 1] : 1,
@@ -206,7 +209,7 @@ export const ImageAudio = () => {
               transition={{
                 scale: {
                   repeat: isPlaying ? Infinity : 0,
-                  repeatType: 'loop',
+                  repeatType: "loop",
                   duration: 1.13,
                 },
                 opacity: {
@@ -220,81 +223,81 @@ export const ImageAudio = () => {
         </DropdownTrigger>
 
         <DropdownMenu
-          aria-label='Music Controls'
-          color='primary'
+          aria-label="Music Controls"
+          color="primary"
           closeOnSelect={false}
         >
-          <DropdownItem key='player' variant='faded'>
-            <div className='text-center mb-2 font-bold text-sm'>
+          <DropdownItem key="player" variant="faded">
+            <div className="text-center mb-2 font-bold text-sm">
               {playlist[currentTrackIndex].title}
             </div>
 
             <Slider
-              aria-label='Music progress'
-              className='max-w-md'
-              color='primary'
+              aria-label="Music progress"
+              className="max-w-md"
+              color="primary"
               minValue={0}
               maxValue={duration}
               value={currentTime}
               onChange={handleSeek}
-              size='sm'
+              size="sm"
             />
 
-            <div className='text-center my-2 text-xs'>
+            <div className="text-center my-2 text-xs">
               <p>
                 {formatTime(currentTime)} / {formatTime(duration)}
               </p>
             </div>
 
-            <ButtonGroup className='flex justify-center'>
+            <ButtonGroup className="flex justify-center">
               <Button
-                onPress={() => changeTrack('prev')}
-                size='sm'
-                variant='ghost'
+                onPress={() => changeTrack("prev")}
+                size="sm"
+                variant="ghost"
               >
                 <FaStepBackward />
               </Button>
 
               <Button
                 onPress={togglePlayPause}
-                color='primary'
-                variant='shadow'
-                size='lg'
+                color="primary"
+                variant="shadow"
+                size="lg"
               >
                 {isPlaying ? <FaPause /> : <FaPlay />}
               </Button>
 
               <Button
-                onPress={() => changeTrack('next')}
-                size='sm'
-                variant='ghost'
+                onPress={() => changeTrack("next")}
+                size="sm"
+                variant="ghost"
               >
                 <FaStepForward />
               </Button>
 
               <Button
                 onPress={toggleShuffle}
-                color={shuffle ? 'primary' : 'default'}
-                size='sm'
-                variant={shuffle ? 'solid' : 'ghost'}
+                color={shuffle ? "primary" : "default"}
+                size="sm"
+                variant={shuffle ? "solid" : "ghost"}
               >
                 <FaRandom />
               </Button>
             </ButtonGroup>
 
-            <div className='mt-4'>
+            <div className="mt-4">
               <Dropdown>
                 <DropdownTrigger>
                   <Button
                     fullWidth
-                    variant='flat'
+                    variant="flat"
                     startContent={<FaVolumeUp />}
                   >
                     Volumen
                   </Button>
                 </DropdownTrigger>
-                <DropdownMenu aria-label='Volume Control'>
-                  <DropdownItem key='volume'>
+                <DropdownMenu aria-label="Volume Control">
+                  <DropdownItem key="volume">
                     <VolumeSetting
                       onChange={handleVolumeChange}
                       volume={volume}
@@ -304,11 +307,11 @@ export const ImageAudio = () => {
               </Dropdown>
             </div>
 
-            <div className='mt-2'>
+            <div className="mt-2">
               <Button
                 fullWidth
-                color='danger'
-                variant='ghost'
+                color="danger"
+                variant="ghost"
                 onPress={stopSound}
                 startContent={<FaStop />}
               >

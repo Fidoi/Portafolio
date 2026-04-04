@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Avatar, Button, Link } from "@heroui/react";
+import { Avatar, Button, Link, ScrollShadow } from "@heroui/react";
 import { getChatResponse } from "@/actions/chat-action";
 import { PromptInputWithBottomActions } from "./prompt-input-with-bottom-actions";
 
@@ -11,7 +11,7 @@ type Message = {
   content: string;
 };
 
-const urlRegex = /(https?:\/\/[^\s)]+|www\.[^\s)]+)/g;
+const urlRegex = /(https?:\/\/[^\s`)\]]+|www\.[^\s`)\]]+)/g;
 
 function LinkifiedText({ text }: { text: string }) {
   const parts = text.split(urlRegex).filter(Boolean);
@@ -25,7 +25,10 @@ function LinkifiedText({ text }: { text: string }) {
           return <React.Fragment key={index}>{part}</React.Fragment>;
         }
 
-        const href = part.startsWith("http") ? part : `https://${part}`;
+        const cleanUrl = part.replace(/[`)\]]+$/, "");
+        const href = cleanUrl.startsWith("http")
+          ? cleanUrl
+          : `https://${cleanUrl}`;
 
         return (
           <Link
@@ -37,7 +40,7 @@ function LinkifiedText({ text }: { text: string }) {
             className="break-all"
             showAnchorIcon
           >
-            {part}
+            {cleanUrl}
           </Link>
         );
       })}
@@ -123,7 +126,13 @@ export const PortfolioAIChat = () => {
 
   const scrollToBottom = React.useCallback(
     (behavior: ScrollBehavior = "smooth") => {
-      bottomRef.current?.scrollIntoView({ behavior, block: "end" });
+      const container = scrollRef.current;
+      if (!container) return;
+
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior,
+      });
     },
     [],
   );
@@ -184,7 +193,7 @@ export const PortfolioAIChat = () => {
     "Cuéntame sobre Fidel y su experiencia",
     "¿Cuántos proyectos tiene este portafolio?",
     "Mencióname un proyecto y explícamelo",
-    "¿Cuál es el proyecto más reciente?",
+    "Cuéntame más sobre este portafolio",
   ];
 
   return (
@@ -210,9 +219,10 @@ export const PortfolioAIChat = () => {
         ))}
       </div>
 
-      <div
+      <ScrollShadow
         ref={scrollRef}
-        className="flex flex-1 flex-col gap-3 overflow-y-auto rounded-2xl border border-default-200 bg-content1 p-4"
+        className="flex flex-1 flex-col gap-3 rounded-2xl border border-default-200 bg-content1 p-4"
+        hideScrollBar
       >
         {messages.map((message) => (
           <MessageBubble
@@ -229,9 +239,7 @@ export const PortfolioAIChat = () => {
             </div>
           </div>
         ) : null}
-
-        <div ref={bottomRef} />
-      </div>
+      </ScrollShadow>
 
       <div className="flex flex-col gap-3">
         <PromptInputWithBottomActions
