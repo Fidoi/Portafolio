@@ -63,6 +63,19 @@ export const MenuNavbar = () => {
             <TitleAnimation title="Integraciones" className="text-2xl" />
           </Link>
         </NavbarItem>
+        <NavbarItem>
+          <Link
+            color="foreground"
+            href="/contact"
+            className={`
+            ${pathname === "/contact" ? "text-warning" : "text-foreground"} 
+            hover:text-primary-700 
+            transition-colors duration-500
+          `}
+          >
+            <TitleAnimation title="Contacto" className="text-2xl" />
+          </Link>
+        </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
         <ThemeSwitcher />
