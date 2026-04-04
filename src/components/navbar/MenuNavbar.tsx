@@ -1,5 +1,5 @@
 "use client";
-import { Navbar, NavbarContent, NavbarItem } from "@heroui/navbar";
+import { Navbar, NavbarContent, NavbarItem } from "@heroui/react";
 import Link from "next/link";
 
 import { ImageAudio } from "./image/music";
@@ -14,8 +14,9 @@ export const MenuNavbar = () => {
     <Navbar
       isBordered
       maxWidth="full"
-      height={"5rem"}
-      className="flex justify-between items-center fixed"
+      height="5rem"
+      position="sticky"
+      className="top-0 z-50 bg-background/80 backdrop-blur-md"
     >
       <NavbarContent justify="start">
         <ImageAudio />

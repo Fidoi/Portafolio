@@ -1,19 +1,9 @@
-'use client';
+"use client";
 
-import { Switch } from '@heroui/react';
-import { useEffect, useState } from 'react';
-import { MoonIcon, SunIcon } from './utils/Icon';
-
-let useTheme: typeof import('@heroui/use-theme').useTheme;
-if (typeof window !== 'undefined') {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  ({ useTheme } = require('@heroui/use-theme'));
-} else {
-  useTheme = () => ({
-    theme: 'dark',
-    setTheme: () => {},
-  });
-}
+import { Switch } from "@heroui/react";
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+import { MoonIcon, SunIcon } from "./utils/Icon";
 
 export const ThemeSwitcher = () => {
   const { theme, setTheme } = useTheme();
@@ -22,19 +12,20 @@ export const ThemeSwitcher = () => {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
   if (!isMounted) {
-    return <div className='theme-switcher-placeholder' />;
+    return <div className="theme-switcher-placeholder" />;
   }
 
   const handleToggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   return (
     <Switch
-      isSelected={theme === 'light'}
-      size='md'
-      color='primary'
+      isSelected={theme === "light"}
+      size="md"
+      color="primary"
       onChange={handleToggleTheme}
       thumbIcon={({ isSelected, className }) =>
         isSelected ? (
