@@ -1,114 +1,69 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Particles from 'react-tsparticles';
-import { loadFull } from 'tsparticles';
-import type { ISourceOptions } from 'tsparticles-engine';
+import { useEffect, useState } from "react";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
+import type { ISourceOptions } from "tsparticles-engine";
 
-const getThemeFromLS = (): 'light' | 'dark' => {
-  const theme = localStorage.getItem('heroui-theme');
-  return theme === 'dark' ? 'dark' : 'light';
+// Detecta el tema actual según la clase 'dark' en el html
+const getThemeFromDOM = (): "light" | "dark" => {
+  if (typeof document === "undefined") return "light";
+  return document.documentElement.classList.contains("dark") ? "dark" : "light";
 };
 
-const getPrimaryColor = (theme: 'light' | 'dark'): string => {
-  return theme === 'dark' ? '#1a1a1a' : '#9353d3';
-};
+// Colores según el tema (ajustados para modo claro)
+const getParticleColor = (theme: "light" | "dark") =>
+  theme === "dark" ? "#1a1a1a" : "#9353d3";
+const getLinkColor = (theme: "light" | "dark") =>
+  theme === "dark" ? "#FFFFFF" : "#1a1a1a";
+const getStrokeColor = (theme: "light" | "dark") =>
+  theme === "dark" ? "#FFFFFF" : "#9353d3";
 
 export const BackgroundParticles = () => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const [valorPrimario, setValorPrimario] = useState<string>('#9353d3');
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [particleColor, setParticleColor] = useState("#9353d3");
 
+  // Efecto inicial y observador de cambios en la clase 'dark'
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedTheme = getThemeFromLS();
-      setTheme(savedTheme);
-      setValorPrimario(getPrimaryColor(savedTheme));
-    }
+    const updateTheme = () => {
+      const newTheme = getThemeFromDOM();
+      setTheme(newTheme);
+      setParticleColor(getParticleColor(newTheme));
+    };
+
+    updateTheme(); // Setear estado inicial
+
+    // Observar cambios en el atributo class del html
+    const observer = new MutationObserver(() => {
+      updateTheme();
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    console.log('Iniciando listener para cambios en localStorage');
-
-    const handleStorageChange = (event: Event) => {
-      let key: string | null = null;
-      let newValue: string | null = null;
-
-      if ((event as StorageEvent).key !== undefined) {
-        const se = event as StorageEvent;
-        key = se.key;
-        newValue = se.newValue;
-      } else {
-        const ce = event as CustomEvent;
-        key = ce.detail.key;
-        newValue = ce.detail.newValue;
-      }
-
-      if (key === 'heroui-theme') {
-        const newTheme: 'light' | 'dark' =
-          newValue === 'dark' ? 'dark' : 'light';
-        console.log(
-          'Detectado cambio en localStorage: heroui-theme =',
-          newTheme
-        );
-        setTheme(newTheme);
-        setValorPrimario(getPrimaryColor(newTheme));
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    window.addEventListener(
-      'localStorageChange',
-      handleStorageChange as EventListener
-    );
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener(
-        'localStorageChange',
-        handleStorageChange as EventListener
-      );
-    };
-  }, []);
-
-  useEffect(() => {
-    const originalSetItem = localStorage.setItem;
-    localStorage.setItem = function (key: string, value: string) {
-      originalSetItem.apply(this, [key, value]);
-      const event = new CustomEvent('localStorageChange', {
-        detail: { key, newValue: value },
-      });
-      console.log('localStorage.setItem disparado: ', key, value);
-      window.dispatchEvent(event);
-    };
-
-    return () => {
-      localStorage.setItem = originalSetItem;
-    };
-  }, []);
-
+  // Opciones de partículas (se recalcula en cada cambio de theme/color)
   const particlesOptions: ISourceOptions = {
     autoPlay: true,
-    background: {
-      color: { value: 'transparent' },
-    },
+    background: { color: { value: "transparent" } },
     fullScreen: { enable: true, zIndex: -10 },
     detectRetina: true,
     fpsLimit: 240,
     interactivity: {
-      detectsOn: 'window' as const,
+      detectsOn: "window",
       events: {
-        onClick: { enable: false, mode: 'push' as const },
+        onClick: { enable: false, mode: "push" },
         onHover: {
           enable: true,
-          mode: 'grab' as const,
+          mode: "grab",
           parallax: { enable: true, force: 60, smooth: 10 },
         },
         resize: { delay: 0.5, enable: true },
       },
-      modes: {
-        push: { default: true, quantity: 4 },
-      },
+      modes: { push: { default: true, quantity: 4 } },
     },
     particles: {
       number: {
@@ -116,10 +71,10 @@ export const BackgroundParticles = () => {
         density: { enable: true, width: 1920, height: 1080 },
       },
       shape: {
-        type: 'circle' as const,
+        type: "circle",
         stroke: {
           width: 1,
-          color: theme === 'dark' ? '#FFFFFF' : '#808080',
+          color: getStrokeColor(theme),
         },
       },
       opacity: {
@@ -128,8 +83,8 @@ export const BackgroundParticles = () => {
           enable: true,
           speed: 1,
           sync: false,
-          mode: 'auto' as const,
-          startValue: 'random' as const,
+          mode: "auto",
+          startValue: "random",
         },
       },
       size: {
@@ -138,31 +93,28 @@ export const BackgroundParticles = () => {
           enable: true,
           speed: 20,
           sync: false,
-          mode: 'auto' as const,
-          startValue: 'random' as const,
+          mode: "auto",
+          startValue: "random",
         },
       },
       move: {
         enable: true,
         speed: 2,
-        direction: 'bottom' as const,
-        outModes: { default: 'out' as const },
+        direction: "bottom",
+        outModes: { default: "out" },
         random: false,
         straight: false,
       },
       links: {
-        color: theme === 'dark' ? '#FFFFFF' : '#808080',
+        color: getLinkColor(theme),
         enable: true,
         distance: 200,
         opacity: 0.4,
         width: 1,
       },
-      bounce: {
-        horizontal: { value: 1 },
-        vertical: { value: 1 },
-      },
+      bounce: { horizontal: { value: 1 }, vertical: { value: 1 } },
       color: {
-        value: valorPrimario,
+        value: particleColor,
         animation: {
           h: { enable: false },
           s: { enable: false },
@@ -173,19 +125,17 @@ export const BackgroundParticles = () => {
     pauseOnBlur: true,
     pauseOnOutsideViewport: true,
     motion: { disable: false, reduce: { factor: 4, value: true } },
-    key: 'parallax',
-    name: 'Parallax',
+    key: "parallax",
+    name: "Parallax",
     zLayers: 100,
   };
 
   return (
-    <div>
-      <Particles
-        key={valorPrimario}
-        id='tsparticles'
-        init={loadFull}
-        options={particlesOptions}
-      />
-    </div>
+    <Particles
+      key={particleColor}
+      id="tsparticles"
+      init={loadFull}
+      options={particlesOptions}
+    />
   );
 };

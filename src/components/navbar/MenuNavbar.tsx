@@ -69,7 +69,7 @@ export const MenuNavbar = () => {
             color="foreground"
             href="/contact"
             className={`
-            ${pathname === "/contact" ? "text-warning" : "text-foreground"} 
+            ${pathname === "/contact" ? "text-primary" : "text-foreground"} 
             hover:text-primary-700 
             transition-colors duration-500
           `}
