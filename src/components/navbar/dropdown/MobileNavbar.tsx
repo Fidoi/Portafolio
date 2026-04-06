@@ -1,84 +1,68 @@
 "use client";
 
-import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  NavbarItem,
-} from "@heroui/react";
-
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FaHome } from "react-icons/fa";
 import { MdWork, MdEmail } from "react-icons/md";
 import { AiFillEye } from "react-icons/ai";
 import { CiMenuBurger } from "react-icons/ci";
+import Dropdown from "./Dropdown";
+import { Button } from "@heroui/react";
 
 export const MobileNavbar = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
   return (
-    <NavbarItem>
-      <Dropdown backdrop="blur">
-        <DropdownTrigger>
-          <Button disableRipple radius="sm" color="primary">
-            <CiMenuBurger />
-            Menu
-          </Button>
-        </DropdownTrigger>
+    <Dropdown backdrop="blur" placement="bottom end">
+      <Dropdown.Trigger>
+        <Button disableRipple radius="sm" color="primary" size="lg">
+          <CiMenuBurger className="text-2xl" />
+        </Button>
+      </Dropdown.Trigger>
 
-        <DropdownMenu aria-label="Navegación" className="w-[340px]">
-          <DropdownItem key="home" textValue="Inicio">
-            <Button
-              as={Link}
-              href="/"
-              variant="light"
-              className="w-full justify-start text-xl"
-            >
-              <FaHome />
-              Inicio
-            </Button>
-          </DropdownItem>
+      <Dropdown.Menu
+        ariaLabel="Navegación"
+        className="w-[340px] text-lg"
+        color="primary"
+      >
+        <Dropdown.Item
+          href="/"
+          startContent={<FaHome />}
+          className={pathname === "/" ? "text-primary" : "text-foreground"}
+        >
+          Inicio
+        </Dropdown.Item>
 
-          <DropdownItem key="projects" textValue="Proyectos">
-            <Button
-              as={Link}
-              href="/projects"
-              variant="light"
-              className="w-full justify-start text-xl"
-            >
-              <MdWork />
-              Proyectos
-            </Button>
-          </DropdownItem>
+        <Dropdown.Item
+          href="/projects"
+          startContent={<MdWork />}
+          className={
+            pathname === "/projects" ? "text-primary" : "text-foreground"
+          }
+        >
+          Proyectos
+        </Dropdown.Item>
 
-          <DropdownItem key="integrations" textValue="Integraciones">
-            <Button
-              as={Link}
-              href="/integrations"
-              variant="light"
-              className="w-full justify-start text-xl"
-            >
-              <AiFillEye />
-              Integraciones
-            </Button>
-          </DropdownItem>
+        <Dropdown.Item
+          href="/integrations"
+          startContent={<AiFillEye />}
+          className={
+            pathname === "/integrations" ? "text-primary" : "text-foreground"
+          }
+        >
+          Integraciones
+        </Dropdown.Item>
 
-          <DropdownItem key="contact" textValue="Contacto">
-            <Button
-              as={Link}
-              href="/contact"
-              variant="light"
-              className="w-full justify-start text-xl"
-            >
-              <MdEmail />
-              Contacto
-            </Button>
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-    </NavbarItem>
+        <Dropdown.Item
+          href="/contact"
+          startContent={<MdEmail />}
+          className={
+            pathname === "/contact" ? "text-warning" : "text-foreground"
+          }
+        >
+          Contacto
+        </Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
   );
 };

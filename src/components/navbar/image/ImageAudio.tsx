@@ -1,14 +1,9 @@
 "use client";
 
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  Button,
-  ButtonGroup,
-  Slider,
-} from "@heroui/react";
+import { Button, ButtonGroup, Slider } from "@heroui/react";
+import { useEffect, useRef, useState } from "react";
+import YouTube, { YouTubePlayer } from "react-youtube";
+import { motion } from "framer-motion";
 import {
   FaPlay,
   FaPause,
@@ -18,12 +13,11 @@ import {
   FaStepBackward,
   FaRandom,
 } from "react-icons/fa";
-import { useEffect, useRef, useState } from "react";
-import YouTube, { YouTubePlayer } from "react-youtube";
+
 import { ImageNavbar } from "../ImageNavbar";
 import VolumeSetting from "./volume";
-import { motion } from "framer-motion";
 import { getPlayList } from "@/actions";
+import Dropdown from "../dropdown/Dropdown";
 
 declare global {
   interface Window {
@@ -205,8 +199,8 @@ export const ImageAudio = () => {
 
   if (loading) {
     return (
-      <button className="cursor-pointer inline-block p-2 rounded-full border-2 border-transparent opacity-60">
-        <div className="w-10 h-10 rounded-full bg-gray-300 animate-pulse" />
+      <button className="inline-block cursor-pointer rounded-full border-2 border-transparent p-2 opacity-60">
+        <div className="h-10 w-10 animate-pulse rounded-full bg-gray-300" />
       </button>
     );
   }
@@ -224,9 +218,9 @@ export const ImageAudio = () => {
         />
       </div>
 
-      <Dropdown>
-        <DropdownTrigger>
-          <button className="cursor-pointer inline-block p-2 rounded-full border-2 border-transparent hover:border-blue-400 transition-all duration-300 focus:outline-none focus:ring-0">
+      <Dropdown backdrop="blur" placement="bottom end" closeOnSelect={false}>
+        <Dropdown.Trigger>
+          <button className="inline-block cursor-pointer rounded-full border-2 border-transparent p-2 transition-all duration-300 hover:border-blue-400 focus:outline-none focus:ring-0">
             <motion.div
               animate={{
                 scale: isPlaying ? [1, 1.05, 1] : 1,
@@ -244,106 +238,116 @@ export const ImageAudio = () => {
               <ImageNavbar thumbnail={currentThumbnail} />
             </motion.div>
           </button>
-        </DropdownTrigger>
+        </Dropdown.Trigger>
 
-        <DropdownMenu
-          aria-label="Music Controls"
+        <Dropdown.Menu
+          ariaLabel="Music Controls"
           color="primary"
+          className="w-[360px]"
           closeOnSelect={false}
         >
-          <DropdownItem key="player" variant="faded">
-            <div className="text-center mb-2 font-bold text-sm">
-              {playList[currentTrackIndex]?.name}
-            </div>
+          <Dropdown.Section>
+            <div className="flex flex-col gap-1 px-2 py-3">
+              <div className="text-center text-base font-bold">
+                {playList[currentTrackIndex]?.name}
+              </div>
 
-            <Slider
-              aria-label="Music progress"
-              className="max-w-md"
-              color="primary"
-              minValue={0}
-              maxValue={duration}
-              value={currentTime}
-              onChange={handleSeek}
-              size="sm"
-            />
-
-            <div className="text-center my-2 text-xs">
-              <p>
-                {formatTime(currentTime)} / {formatTime(duration)}
-              </p>
-            </div>
-
-            <ButtonGroup className="flex justify-center">
-              <Button
-                onPress={() => changeTrack("prev")}
-                size="sm"
-                variant="ghost"
-              >
-                <FaStepBackward />
-              </Button>
-
-              <Button
-                onPress={togglePlayPause}
+              <Slider
+                aria-label="Music progress"
+                className="max-w-md"
                 color="primary"
-                variant="shadow"
-                size="lg"
-              >
-                {isPlaying ? <FaPause /> : <FaPlay />}
-              </Button>
-
-              <Button
-                onPress={() => changeTrack("next")}
+                minValue={0}
+                maxValue={duration}
+                value={currentTime}
+                onChange={handleSeek}
                 size="sm"
-                variant="ghost"
-              >
-                <FaStepForward />
-              </Button>
+              />
 
-              <Button
-                onPress={toggleShuffle}
-                color={shuffle ? "primary" : "default"}
-                size="sm"
-                variant={shuffle ? "solid" : "ghost"}
-              >
-                <FaRandom />
-              </Button>
-            </ButtonGroup>
+              <div className="text-center text-xs">
+                <p>
+                  {formatTime(currentTime)} / {formatTime(duration)}
+                </p>
+              </div>
 
-            <div className="mt-4">
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button
-                    fullWidth
-                    variant="flat"
-                    startContent={<FaVolumeUp />}
+              <ButtonGroup className="flex justify-center">
+                <Button
+                  onPress={() => changeTrack("prev")}
+                  size="sm"
+                  variant="ghost"
+                >
+                  <FaStepBackward />
+                </Button>
+
+                <Button
+                  onPress={togglePlayPause}
+                  color="primary"
+                  variant="shadow"
+                  size="lg"
+                >
+                  {isPlaying ? <FaPause /> : <FaPlay />}
+                </Button>
+
+                <Button
+                  onPress={() => changeTrack("next")}
+                  size="sm"
+                  variant="ghost"
+                >
+                  <FaStepForward />
+                </Button>
+
+                <Button
+                  onPress={toggleShuffle}
+                  color={shuffle ? "primary" : "default"}
+                  size="sm"
+                  variant={shuffle ? "solid" : "ghost"}
+                >
+                  <FaRandom />
+                </Button>
+              </ButtonGroup>
+
+              <div className="pt-2">
+                <Dropdown backdrop="blur" closeOnSelect={false}>
+                  <Dropdown.Trigger>
+                    <Button
+                      fullWidth
+                      variant="flat"
+                      startContent={<FaVolumeUp />}
+                      className="justify-start w-full"
+                    >
+                      Volumen
+                    </Button>
+                  </Dropdown.Trigger>
+
+                  <Dropdown.Menu
+                    ariaLabel="Volume Control"
+                    className="w-[220px]"
                   >
-                    Volumen
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Volume Control">
-                  <DropdownItem key="volume">
-                    <VolumeSetting
-                      onChange={handleVolumeChange}
-                      volume={volume}
-                    />
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </div>
+                    <Dropdown.Section>
+                      <div className="px-2 py-2">
+                        <VolumeSetting
+                          onChange={handleVolumeChange}
+                          volume={volume}
+                        />
+                      </div>
+                    </Dropdown.Section>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
 
-            <div className="mt-2">
-              <Button
-                fullWidth
-                color="danger"
-                variant="ghost"
-                onPress={stopSound}
-                startContent={<FaStop />}
-              >
-                Detener
-              </Button>
+              <div className="pt-2">
+                <Button
+                  fullWidth
+                  color="danger"
+                  variant="ghost"
+                  onPress={stopSound}
+                  startContent={<FaStop />}
+                >
+                  Detener
+                </Button>
+              </div>
             </div>
-          </DropdownItem>
-        </DropdownMenu>
+          </Dropdown.Section>
+        </Dropdown.Menu>
       </Dropdown>
     </>
   );
