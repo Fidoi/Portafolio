@@ -24,11 +24,23 @@ export const Cards = ({ title, urlImage, url }: Props) => {
         />
       </Link>
       <CardFooter className="backdrop-blur-2xl before:bg-white/10 border-white/20 border-1 overflow-hidden py-3 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10 flex justify-center pointer-events-none cursor-default">
-        <h1
-          className={`font-bold text-2xl border-b-4 border-primary text-gray-900 text-shadow-glow`}
-        >
-          {title}
-        </h1>
+        <div className="inline-block">
+          <h1
+            className="font-extrabold text-2xl text-accent tracking-tight"
+            style={{
+              textShadow: `
+        0.5px 0 0 rgba(0,0,0,0.85),
+        -0.5px 0 0 rgba(0,0,0,0.85),
+        0 0.5px 0 rgba(0,0,0,0.85),
+        0 -0.5px 0 rgba(0,0,0,0.85),
+        0 2px 8px rgba(0,0,0,0.2)
+      `,
+            }}
+          >
+            {title}
+          </h1>
+          <div className="mt-1 h-[3px] rounded-full bg-gradient-to-r from-accent to-primary"></div>
+        </div>
       </CardFooter>
     </Card>
   );
