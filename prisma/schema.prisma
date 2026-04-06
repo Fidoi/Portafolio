@@ -35,7 +35,12 @@ model MainInfo {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
-
+model PlayList {
+  id        Int      @id @default(autoincrement())
+  name      String
+  videoId   String
+  createdAt DateTime @default(now())
+}
 model SystemPrompt {
   id        Int      @id @default(autoincrement())
   content   String   

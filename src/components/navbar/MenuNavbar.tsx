@@ -1,12 +1,13 @@
 "use client";
 import { Navbar, NavbarContent, NavbarItem } from "@heroui/react";
 import Link from "next/link";
+import { MobileNavbar } from "./dropdown/MobileNavbar";
 
-import { ImageAudio } from "./image/music";
 import { ThemeSwitcher } from "./ThemeSwitcher";
-import { DropDown } from "./dropdown/DropDown";
+
 import { TitleAnimation } from "../ui/titles/titleAnimation";
 import { usePathname } from "next/navigation";
+import { ImageAudio } from "./image/ImageAudio";
 
 export const MenuNavbar = () => {
   const pathname = usePathname();
@@ -22,7 +23,7 @@ export const MenuNavbar = () => {
         <ImageAudio />
       </NavbarContent>
       <NavbarContent className="sm:hidden" justify="center">
-        <DropDown />
+        <MobileNavbar />
       </NavbarContent>
       <NavbarContent className="hidden sm:flex" justify="center">
         <NavbarItem isActive>

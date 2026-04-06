@@ -6,7 +6,7 @@ export * from "./ui/titles/Title";
 export * from "./ui/titles/TypeAnimation";
 
 export * from "./navbar/MenuNavbar";
-export * from "./navbar/image/music";
+export * from "./navbar/image/ImageAudio";
 
 export * from "./sections/projects/Cards";
 export * from "./sections/projects/CardsInfo";

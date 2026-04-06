@@ -16,7 +16,7 @@ import { MdWork, MdEmail } from "react-icons/md";
 import { AiFillEye } from "react-icons/ai";
 import { CiMenuBurger } from "react-icons/ci";
 
-export const DropDown = () => {
+export const MobileNavbar = () => {
   const pathname = usePathname();
 
   return (

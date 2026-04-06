@@ -65,7 +65,7 @@ Si ambas claves llegan al límite, el chatbot deja de responder y muestra el men
 
 ## Contacto
 
-La sección de contacto me permite recibir mensajes directamente desde el portafolio mediante un formulario sencillo. Ese envío se procesa con **Resend**, usando el correo definido en `FROM_EMAIL`.
+La sección de contacto me permite recibir mensajes directamente desde el portafolio mediante un formulario sencillo. Ese envío se procesa con **Resend**, usando el correo definido en `CONTACT_EMAIL`.
 
 ## Estado del proyecto
 

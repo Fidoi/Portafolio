@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Dropdown,
   DropdownTrigger,
@@ -22,6 +23,7 @@ import YouTube, { YouTubePlayer } from "react-youtube";
 import { ImageNavbar } from "../ImageNavbar";
 import VolumeSetting from "./volume";
 import { motion } from "framer-motion";
+import { getPlayList } from "@/actions";
 
 declare global {
   interface Window {
@@ -35,17 +37,22 @@ declare global {
   }
 }
 
-const PLAYLIST = [
-  { id: "FKwVFWwA_x8", title: "Duran Duran - INVISIBLE" },
-  { id: "cxKs2b5lRsA", title: "Flashing Lights" },
-  { id: "vjwaB2nT4h8", title: "Viliam Lane - particles" },
-  { id: "0PNaf6DkYHE", title: "Under Bright Lights" },
-  { id: "MxEjnYdfLXU", title: "I Wonder" },
-  { id: "Fl0YWLT6iFE", title: "METAMORPHOSIS 2" },
-  { id: "317RHaFF7Xk", title: "METAMORPHOSIS" },
-  { id: "b95JTn8j7cM", title: "RAPTURE" },
-  { id: "q0Kxangw3-w", title: "Bonetrousle - UNDERTALE" },
-];
+type Track = {
+  id: number;
+  name: string;
+  videoId: string;
+};
+
+const opts = {
+  height: "0",
+  width: "0",
+  playerVars: {
+    autoplay: 0 as 0 | 1 | undefined,
+    controls: 0 as 0 | 1 | undefined,
+    disablekb: 1 as 0 | 1 | undefined,
+    modestbranding: 1 as 1 | undefined,
+  },
+};
 
 export const ImageAudio = () => {
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
@@ -55,77 +62,83 @@ export const ImageAudio = () => {
   const [volume, setVolume] = useState(80);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [shuffle, setShuffle] = useState(false);
-  const [playlist, setPlaylist] = useState(PLAYLIST);
+  const [playList, setPlayList] = useState<Track[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const opts = {
-    height: "0",
-    width: "0",
-    playerVars: {
-      autoplay: 0 as 0 | 1 | undefined,
-      controls: 0 as 0 | 1 | undefined,
-      disablekb: 1 as 0 | 1 | undefined,
-      modestbranding: 1 as 1 | undefined,
-    },
-  };
+  useEffect(() => {
+    const loadTracks = async () => {
+      try {
+        const tracks = await getPlayList();
+        setPlayList(tracks);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadTracks();
+  }, []);
 
   const loadTrack = (index: number) => {
-    if (player) {
-      player.loadVideoById(playlist[index].id);
-      setCurrentTrackIndex(index);
-      setCurrentTime(0);
-      setIsPlaying(true);
-    }
+    if (!player || playList.length === 0) return;
+
+    const track = playList[index];
+    if (!track) return;
+
+    player.loadVideoById(track.videoId);
+    setCurrentTrackIndex(index);
+    setCurrentTime(0);
+    setIsPlaying(true);
   };
 
   const changeTrack = (direction: "next" | "prev") => {
+    if (playList.length === 0) return;
+
     let newIndex = currentTrackIndex;
 
     if (shuffle) {
-      newIndex = Math.floor(Math.random() * playlist.length);
+      if (playList.length === 1) {
+        newIndex = 0;
+      } else {
+        do {
+          newIndex = Math.floor(Math.random() * playList.length);
+        } while (newIndex === currentTrackIndex);
+      }
     } else {
       newIndex =
         direction === "next"
-          ? (currentTrackIndex + 1) % playlist.length
-          : (currentTrackIndex - 1 + playlist.length) % playlist.length;
+          ? (currentTrackIndex + 1) % playList.length
+          : (currentTrackIndex - 1 + playList.length) % playList.length;
     }
 
     loadTrack(newIndex);
   };
+
   const toggleShuffle = () => {
-    if (!shuffle) {
-      const shuffled = [...PLAYLIST].sort(() => Math.random() - 0.5);
-      setPlaylist(shuffled);
-      setCurrentTrackIndex(0);
-    } else {
-      const originalIndex = PLAYLIST.findIndex(
-        (track) => track.id === playlist[currentTrackIndex].id,
-      );
-      setPlaylist(PLAYLIST);
-      setCurrentTrackIndex(originalIndex);
-    }
-    setShuffle(!shuffle);
+    setShuffle((prev) => !prev);
   };
 
   const onReady = async (event: { target: YouTubePlayer }) => {
     setPlayer(event.target);
-    const duration = await event.target.getDuration();
-    setDuration(duration);
+    const total = await event.target.getDuration();
+    setDuration(total);
   };
 
   const onStateChange = async (event: {
     data: number;
     target: YouTubePlayer;
-  }): Promise<void> => {
+  }) => {
     if (event.data === window.YT.PlayerState.ENDED) {
       setTimeout(() => {
         changeTrack("next");
       }, 500);
     } else if (event.data === window.YT.PlayerState.PLAYING) {
       setIsPlaying(true);
-      const currentDuration = await event.target.getDuration();
-      setDuration(currentDuration);
+      const total = await event.target.getDuration();
+      setDuration(total);
     } else if (event.data === window.YT.PlayerState.PAUSED) {
       setIsPlaying(false);
     }
@@ -173,7 +186,9 @@ export const ImageAudio = () => {
     };
 
     if (isPlaying) {
-      intervalRef.current = setInterval(updateTime, 500);
+      intervalRef.current = setInterval(() => {
+        void updateTime();
+      }, 500);
     }
 
     return () => {
@@ -181,23 +196,34 @@ export const ImageAudio = () => {
     };
   }, [isPlaying, player]);
 
-  const formatTime = (seconds: number) => {
-    return `${Math.floor(seconds / 60)}:${String(
-      Math.floor(seconds % 60),
-    ).padStart(2, "0")}`;
-  };
-  const currentThumbnail = `https://img.youtube.com/vi/${playlist[currentTrackIndex].id}/hqdefault.jpg`;
+  const formatTime = (seconds: number) =>
+    `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
+
+  const currentThumbnail = playList[currentTrackIndex]?.videoId
+    ? `https://img.youtube.com/vi/${playList[currentTrackIndex].videoId}/hqdefault.jpg`
+    : "";
+
+  if (loading) {
+    return (
+      <button className="cursor-pointer inline-block p-2 rounded-full border-2 border-transparent opacity-60">
+        <div className="w-10 h-10 rounded-full bg-gray-300 animate-pulse" />
+      </button>
+    );
+  }
+
+  if (playList.length === 0) return null;
 
   return (
     <>
       <div className="hidden">
         <YouTube
-          videoId={PLAYLIST[0].id}
+          videoId={playList[0].videoId}
           opts={opts}
           onReady={onReady}
           onStateChange={onStateChange}
         />
       </div>
+
       <Dropdown>
         <DropdownTrigger>
           <button className="cursor-pointer inline-block p-2 rounded-full border-2 border-transparent hover:border-blue-400 transition-all duration-300 focus:outline-none focus:ring-0">
@@ -212,9 +238,7 @@ export const ImageAudio = () => {
                   repeatType: "loop",
                   duration: 1.13,
                 },
-                opacity: {
-                  duration: 0.5,
-                },
+                opacity: { duration: 0.5 },
               }}
             >
               <ImageNavbar thumbnail={currentThumbnail} />
@@ -229,7 +253,7 @@ export const ImageAudio = () => {
         >
           <DropdownItem key="player" variant="faded">
             <div className="text-center mb-2 font-bold text-sm">
-              {playlist[currentTrackIndex].title}
+              {playList[currentTrackIndex]?.name}
             </div>
 
             <Slider
