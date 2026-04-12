@@ -30,7 +30,7 @@ export const MenuNavbar = () => {
           <Link
             href="/projects"
             className={`
-            ${pathname === "/projects" ? "text-primary" : "text-foreground"} 
+             ${pathname.startsWith("/projects") ? "text-primary" : "text-foreground"} 
             hover:text-primary-700 
             transition-colors duration-500
           `}

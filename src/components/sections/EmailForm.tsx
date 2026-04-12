@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import confetti from "canvas-confetti";
 
 import dynamic from "next/dynamic";
+import { FiMail, FiPhone } from "react-icons/fi";
 
 const Button = dynamic(
   () => import("@heroui/react").then((mod) => mod.Button),
@@ -126,19 +127,37 @@ export const EmailForm = () => {
           className="flex flex-col sm:flex-row my-12 py-10 gap-4 relative px-3 bg-opacity-95 md:max-w-[900px] md:max-h-[450px]"
           id="contact"
         >
-          <div className="flex flex-col justify-center items-center">
-            <h5 className="text-xl font-bold my-3 text-primary">
+          <div className="flex flex-col justify-center items-center gap-5">
+            <h5 className="text-xl font-bold text-primary">
               Manten el contacto
             </h5>
-            <p className="mb-4 max-w-md">
+            <p className=" max-w-md">
               En búsqueda de nuevas oportunidades y siempre con la bandeja de
               entrada abierta. Si tienes alguna pregunta o solo quieres saludar,
               ¡haré lo posible por responderte!
             </p>
-            <div className="flex flex-row gap-2">
-              <Link href="https://github.com/Fidoi" color="primary" isExternal>
+            <div className="flex flex-row items-center gap-4">
+              <Link
+                href="https://github.com/Fidoi"
+                color="primary"
+                isExternal
+                className="flex flex-col items-center gap-2"
+              >
+                {" "}
                 <GitHubIcon />
               </Link>
+
+              <div className="flex flex-col gap-2">
+                <Link color="primary" className="flex items-center gap-2">
+                  <FiMail />
+                  <span>fidel.alarcon.leiva@hotmail.com</span>
+                </Link>
+
+                <Link color="primary" className="flex items-center gap-2">
+                  <FiPhone />
+                  <span>+56 9 5674 8417</span>
+                </Link>
+              </div>
             </div>
           </div>
           <div>

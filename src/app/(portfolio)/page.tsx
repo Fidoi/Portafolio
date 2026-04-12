@@ -1,3 +1,4 @@
+import { getGalleryImages } from "@/actions";
 import {
   ButtonDownload,
   Chart,
@@ -5,12 +6,14 @@ import {
   TypeAnimations,
 } from "@/components";
 import { ButtonComponent } from "@/components/components/ButtonComponent";
+import { Divider } from "@heroui/react";
 
-export default function Portfolio() {
+export default async function Portfolio() {
+  const images = await getGalleryImages();
   return (
     <div className="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-12 gap-5 gap-y-10 lg:mt-0">
       <div className="col-span-2 md:col-span-6 lg:col-span-8 grid gap-10 md:gap-8 lg:gap-5">
-        <h1 className="flex flex-col gap-2 text-7xl lg:text-8xl font-semibold tracking-tight inline">
+        <h1 className="flex flex-col gap-2 text-7xl lg:text-9xl font-semibold tracking-tight ">
           <span className="bg-clip-text ">Hola soy </span>
           <TypeAnimations />
         </h1>
@@ -35,13 +38,14 @@ export default function Portfolio() {
             }
             text={"Descargar CV"}
           />
-        </div>
+        </div>{" "}
+        <Divider />
         <div className="w-full">
           <Chart />
         </div>
       </div>
-      <div className="col-span-2 md:col-span-6 lg:col-span-4 flex flex-col items-center justify-center gap-5 text-center">
-        <ImageManager />
+      <div className="col-span-2 md:col-span-6 lg:col-span-4 flex flex-col items-center gap-5 text-center">
+        <ImageManager images={images} />
         <h1 className="flex items-center justify-center">
           <em>
             Mis hobbies son dibujar, hacer ejercicio y jugar <br></br>Nota:

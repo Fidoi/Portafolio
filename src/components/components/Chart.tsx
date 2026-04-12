@@ -6,6 +6,7 @@ import type { CardProps } from "@heroui/react";
 import { ResponsiveContainer, PieChart, Pie, Tooltip, Cell } from "recharts";
 import { Card, cn, Divider } from "@heroui/react";
 import { TitleAnimation } from "../ui/titles/titleAnimation";
+import { FiChevronDown, FiChevronLeft } from "react-icons/fi";
 
 type ChartData = {
   name: string;
@@ -21,7 +22,7 @@ type CircleChartProps = {
 
 const data: CircleChartProps[] = [
   {
-    title: "FullStack",
+    title: "Stack principal",
     categories: ["Frontend", "Backend"],
     chartData: [
       { name: "Frontend", value: 75, color: "primary-500" },
@@ -91,16 +92,26 @@ export const Chart = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-7">
-      <div
+      <button
+        type="button"
         onClick={handleToggle}
+        aria-expanded={isOpen}
         className={cn(
-          "relative transition-all duration-300 ease-in-out cursor-pointer",
+          "relative w-full text-left transition-all duration-300 ease-in-out cursor-pointer",
           isOpen
             ? "grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-4"
-            : "grid grid-cols-1"
+            : "grid grid-cols-1",
         )}
         style={{ minHeight: isOpen ? undefined : 250 }}
       >
+        {!isOpen && (
+          <div className="pointer-events-none absolute right-0 -top-10 sm:right-auto sm:left-96 sm:top-0 lg:left-64 z-20 flex items-center gap-2 rounded-full bg-background/80 px-3 py-1 text-sm shadow-md backdrop-blur-md">
+            <FiChevronDown className="text-2xl sm:hidden" />
+            <FiChevronLeft className="hidden text-2xl sm:block" />
+            <span>Ver tecnologías</span>
+          </div>
+        )}
+
         {data.map((item, index) => {
           const stackOffsetY = 12;
           const closedTransform = {
@@ -131,14 +142,14 @@ export const Chart = () => {
               }}
               className={cn(
                 "w-full relative",
-                isOpen ? "max-w-full" : "max-w-[350px] lg:max-w-[250px]"
+                isOpen ? "max-w-full" : "max-w-[350px] lg:max-w-[250px]",
               )}
             >
               <CircleChartCard {...item} />
             </motion.div>
           );
         })}
-      </div>
+      </button>
     </div>
   );
 };
@@ -155,29 +166,31 @@ const CircleChartCard = React.forwardRef<
     <Card
       ref={ref}
       className={cn(
-        ` w-full
-          h-full
-          min-h-[240px]
-          md:min-h-[240px]
-          transition-all
-          duration-500
-          border border-default-200 dark:border-default-100`,
-        className
+        `w-full
+         h-full
+         min-h-[230px]
+         md:min-h-[200px]
+         transition-all
+         duration-500
+         border border-default-200 dark:border-default-100`,
+        className,
       )}
       {...props}
     >
-      <div className="flex flex-col ">
+      <div className="flex flex-col">
         <div className="flex items-center justify-center gap-x-2">
           <dt>
             <TitleAnimation title={title} className="text-2xl" />
           </dt>
         </div>
       </div>
+
       <Divider />
+
       <div className="flex h-full flex-wrap items-center justify-center gap-x-2 lg:flex-nowrap">
         <ResponsiveContainer
           className="[&_.recharts-surface]:outline-none"
-          height={200}
+          height={180}
           width="100%"
         >
           <PieChart margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
@@ -190,6 +203,7 @@ const CircleChartCard = React.forwardRef<
                     const value = p.value;
                     const category =
                       categories.find((c) => c.toLowerCase() === name) ?? name;
+
                     return (
                       <div
                         key={`${index}-${name}`}
@@ -217,6 +231,7 @@ const CircleChartCard = React.forwardRef<
               )}
               cursor={false}
             />
+
             <Pie
               animationDuration={1000}
               animationEasing="ease"
@@ -238,7 +253,8 @@ const CircleChartCard = React.forwardRef<
             </Pie>
           </PieChart>
         </ResponsiveContainer>
-        <div className="flex  flex-row md:flex-col justify-center gap-4 p-4 text-tiny text-default-500 lg:p-0">
+
+        <div className="flex flex-row md:flex-col justify-center gap-4 p-4 text-tiny text-default-500 lg:p-0">
           {categories.map((category, index) => (
             <div key={index} className="flex items-center gap-2">
               <span
