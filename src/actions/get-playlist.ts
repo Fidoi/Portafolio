@@ -6,12 +6,13 @@ export const getPlayList = async () => {
   try {
     const tracks = await prisma.playList.findMany({
       orderBy: {
-        createdAt: "asc",
+        position: "asc",
       },
       select: {
         id: true,
         name: true,
         videoId: true,
+        position: true,
       },
     });
 

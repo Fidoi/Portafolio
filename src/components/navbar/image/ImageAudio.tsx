@@ -66,6 +66,7 @@ export const ImageAudio = () => {
       try {
         const tracks = await getPlayList();
         setPlayList(tracks);
+        setCurrentTrackIndex(0);
       } catch (error) {
         console.error(error);
       } finally {
@@ -73,7 +74,7 @@ export const ImageAudio = () => {
       }
     };
 
-    loadTracks();
+    void loadTracks();
   }, []);
 
   const loadTrack = (index: number) => {

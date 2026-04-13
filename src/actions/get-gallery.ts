@@ -14,6 +14,7 @@ export const getGalleryImages = async (): Promise<Img[]> => {
         alt: true,
         width: true,
         height: true,
+        order: true,
       },
     });
 

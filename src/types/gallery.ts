@@ -3,4 +3,5 @@ export type Img = {
   alt?: string | null;
   width?: number | null;
   height?: number | null;
+  order: number;
 };
