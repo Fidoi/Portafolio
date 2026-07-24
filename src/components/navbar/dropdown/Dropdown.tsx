@@ -165,129 +165,6 @@ function normalizeSelection(
   return new Set(input);
 }
 
-function colorButtonClasses(
-  color: DropdownColor,
-  variant: DropdownTriggerVariant,
-) {
-  const base = "transition-colors";
-
-  if (variant === "ghost") {
-    switch (color) {
-      case "primary":
-        return cn(base, "bg-transparent text-primary hover:bg-primary/10");
-      case "secondary":
-        return cn(base, "bg-transparent text-secondary hover:bg-secondary/10");
-      case "success":
-        return cn(base, "bg-transparent text-success hover:bg-success/10");
-      case "warning":
-        return cn(base, "bg-transparent text-warning hover:bg-warning/10");
-      case "danger":
-        return cn(base, "bg-transparent text-danger hover:bg-danger/10");
-      default:
-        return cn(base, "bg-transparent text-foreground hover:bg-foreground/5");
-    }
-  }
-
-  if (variant === "bordered") {
-    switch (color) {
-      case "primary":
-        return cn(
-          base,
-          "border border-divider bg-background text-primary hover:bg-primary/10",
-        );
-      case "secondary":
-        return cn(
-          base,
-          "border border-divider bg-background text-secondary hover:bg-secondary/10",
-        );
-      case "success":
-        return cn(
-          base,
-          "border border-divider bg-background text-success hover:bg-success/10",
-        );
-      case "warning":
-        return cn(
-          base,
-          "border border-divider bg-background text-warning hover:bg-warning/10",
-        );
-      case "danger":
-        return cn(
-          base,
-          "border border-divider bg-background text-danger hover:bg-danger/10",
-        );
-      default:
-        return cn(
-          base,
-          "border border-divider bg-background text-foreground hover:bg-foreground/5",
-        );
-    }
-  }
-
-  if (variant === "flat") {
-    switch (color) {
-      case "primary":
-        return cn(base, "bg-primary/10 text-primary hover:bg-primary/15");
-      case "secondary":
-        return cn(base, "bg-secondary/10 text-secondary hover:bg-secondary/15");
-      case "success":
-        return cn(base, "bg-success/10 text-success hover:bg-success/15");
-      case "warning":
-        return cn(base, "bg-warning/10 text-warning hover:bg-warning/15");
-      case "danger":
-        return cn(base, "bg-danger/10 text-danger hover:bg-danger/15");
-      default:
-        return cn(
-          base,
-          "bg-foreground/5 text-foreground hover:bg-foreground/10",
-        );
-    }
-  }
-
-  switch (color) {
-    case "primary":
-      return cn(base, "bg-primary text-primary-foreground hover:opacity-90");
-    case "secondary":
-      return cn(
-        base,
-        "bg-secondary text-secondary-foreground hover:opacity-90",
-      );
-    case "success":
-      return cn(base, "bg-success text-success-foreground hover:opacity-90");
-    case "warning":
-      return cn(base, "bg-warning text-warning-foreground hover:opacity-90");
-    case "danger":
-      return cn(base, "bg-danger text-danger-foreground hover:opacity-90");
-    default:
-      return cn(
-        base,
-        "bg-background text-foreground border border-divider hover:bg-foreground/5",
-      );
-  }
-}
-
-function iconButtonClasses() {
-  return "inline-flex items-center justify-center gap-2 rounded-xl font-medium outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background";
-}
-
-function ChevronDown({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      fill="none"
-      aria-hidden="true"
-      className={className}
-    >
-      <path
-        d="M5 7.5L10 12.5L15 7.5"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function CheckIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -454,11 +331,19 @@ function DropdownRoot({
   );
 }
 
+// Props que inyectamos al hijo del trigger vía cloneElement.
+type TriggerChildProps = {
+  className?: string;
+  ref?: React.Ref<HTMLElement>;
+  "aria-haspopup"?: "menu";
+  "aria-expanded"?: boolean;
+  onClick?: React.MouseEventHandler;
+  onPress?: () => void;
+};
+
 function DropdownTrigger({
   children,
   className,
-  color = "primary",
-  variant = "solid",
   size = "md",
   fullWidth = false,
 }: TriggerProps) {
@@ -470,8 +355,6 @@ function DropdownTrigger({
       : size === "lg"
         ? "h-11 px-4 text-base"
         : "h-9 px-3.5 text-sm";
-
-  const appearance = colorButtonClasses(color, variant);
 
   const triggerClassName = cn(
     "inline-flex items-center justify-center gap-2 rounded-xl font-medium outline-none",
@@ -485,18 +368,25 @@ function DropdownTrigger({
   };
 
   if (isValidElement(children)) {
-    const child = children as ReactElement<any>;
+    const child = children as ReactElement<TriggerChildProps>;
+    const isNativeElement = typeof child.type === "string";
     const isButtonLike =
-      typeof child.type === "string" &&
-      (child.type === "button" || child.type === "a");
+      isNativeElement && (child.type === "button" || child.type === "a");
+
+    // Los elementos nativos se activan con onClick. Los componentes (HeroUI)
+    // esperan onPress: pasarles onClick funciona, pero emite un warning de
+    // deprecación en consola.
+    const activationProps = isNativeElement
+      ? { onClick: openMenu }
+      : { onPress: openMenu };
 
     return cloneElement(child, {
       ref: composeRefs(triggerRef as React.Ref<HTMLElement>),
       "aria-haspopup": "menu" as const,
       "aria-expanded": open,
-      onClick: openMenu,
+      ...activationProps,
       className: cn(
-        (child.props as any).className,
+        child.props.className,
         !isButtonLike && triggerClassName,
         isButtonLike && "p-0 bg-transparent border-none",
         className,

@@ -1,6 +1,37 @@
 import { heroui } from "@heroui/theme";
 import type { Config } from "tailwindcss";
 
+/**
+ * Rampa de marca (violeta). Una sola identidad para light y dark:
+ * cambia el fondo, no el color de marca. Los tonos siguen una progresión
+ * perceptual (50 claro → 900 oscuro) para que gráficas y acentos armonicen.
+ */
+const brand = {
+  "50": "#F5F3FF",
+  "100": "#EDE9FE",
+  "200": "#DDD6FE",
+  "300": "#C4B5FD",
+  "400": "#A78BFA",
+  "500": "#8B5CF6",
+  "600": "#7C3AED",
+  "700": "#6D28D9",
+  "800": "#5B21B6",
+  "900": "#4C1D95",
+} as const;
+
+// DEFAULT = 600: contraste AA (>4.5:1) con texto blanco en botones sólidos.
+const primary = {
+  ...brand,
+  DEFAULT: "#7C3AED",
+  foreground: "#FFFFFF",
+};
+
+// Colores semánticos compartidos entre temas.
+const success = { DEFAULT: "#17C964", foreground: "#FFFFFF" };
+const warning = { DEFAULT: "#F5A524", foreground: "#000000" };
+const danger = { DEFAULT: "#F31260", foreground: "#FFFFFF" };
+const focus = "#7C3AED";
+
 export default {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -11,9 +42,10 @@ export default {
   ],
   theme: {
     extend: {
+      // `background` y `foreground` los provee HeroUI (con canales HSL para
+      // soportar opacidad, p.ej. bg-background/80). `accent` es el pop ámbar
+      // complementario que se usa en las cards de proyecto.
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
         accent: "#FACC15",
       },
     },
@@ -23,69 +55,26 @@ export default {
       themes: {
         light: {
           colors: {
-            background: { foreground: "#E4E4E7", DEFAULT: "#ffffff" },
-
-            foreground: "#11181C",
-            primary: {
-              foreground: "#FFFFFF",
-              DEFAULT: "#9353d3",
-              "50": "#212121",
-              "100": "#ea2845",
-              "200": "#092e20",
-              "300": "#007acc",
-              "400": "#C4841D",
-              "500": "#f59e0b",
-              "600": "#9333ea",
-              "700": "#ff7bb9ff",
-            },
-            secondary: {
-              foreground: "#FFFFFF",
-              DEFAULT: "#18181b",
-            },
-            warning: {
-              foreground: "#006FEE",
-              DEFAULT: "#004493",
-            },
-            success: {
-              foreground: "#FFFFFF",
-              DEFAULT: "#5EC9A7",
-            },
+            background: { DEFAULT: "#FFFFFF", foreground: "#F4F4F5" },
+            foreground: "#18181B",
+            primary,
+            secondary: { DEFAULT: "#27272A", foreground: "#FFFFFF" },
+            success,
+            warning,
+            danger,
+            focus,
           },
         },
         dark: {
           colors: {
-            background: { foreground: "#18181b", DEFAULT: "#131314" },
+            background: { DEFAULT: "#0E0E11", foreground: "#18181B" },
             foreground: "#ECEDEE",
-            primary: {
-              foreground: "#FFFFFF",
-              DEFAULT: "#006FEE",
-              "50": "#005BC4",
-              "100": "#ff4c61",
-              "200": "#1db954",
-              "300": "#66b3ff",
-              "400": "#FACC15",
-              "500": "#FDBA74",
-              "600": "#8f250b",
-              "700": "#7bd5ffff",
-            },
-            secondary: {
-              foreground: "#FFFFFF",
-              DEFAULT: "#A2E9C1",
-            },
-            warning: {
-              foreground: "#006FEE",
-              DEFAULT: "#09AACD",
-            },
-          },
-        },
-        mytheme: {
-          extend: "dark",
-          colors: {
-            primary: {
-              DEFAULT: "#BEF264",
-              foreground: "#000000",
-            },
-            focus: "#BEF264",
+            primary,
+            secondary: { DEFAULT: "#E4E4E7", foreground: "#18181B" },
+            success,
+            warning,
+            danger,
+            focus,
           },
         },
       },

@@ -46,12 +46,12 @@ export default async function Portfolio() {
       </div>
       <div className="col-span-2 md:col-span-6 lg:col-span-4 flex flex-col items-center gap-5 text-center">
         <ImageManager images={images} />
-        <h1 className="flex items-center justify-center">
+        <p className="flex items-center justify-center">
           <em>
             Mis hobbies son dibujar, hacer ejercicio y jugar <br></br>Nota:
             Algunos los hice con el mouse 😈
           </em>
-        </h1>
+        </p>
       </div>
     </div>
   );

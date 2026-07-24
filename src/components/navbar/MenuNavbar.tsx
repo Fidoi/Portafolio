@@ -31,7 +31,7 @@ export const MenuNavbar = () => {
             href="/projects"
             className={`
              ${pathname.startsWith("/projects") ? "text-primary" : "text-foreground"} 
-            hover:text-primary-700 
+            hover:text-primary-500
             transition-colors duration-500
           `}
           >
@@ -43,7 +43,7 @@ export const MenuNavbar = () => {
             href="/"
             className={`
             ${pathname === "/" ? "text-primary" : "text-foreground"} 
-            hover:text-primary-700 
+            hover:text-primary-500
             transition-colors duration-500
           `}
           >
@@ -57,7 +57,7 @@ export const MenuNavbar = () => {
             href="/integrations"
             className={`
             ${pathname === "/integrations" ? "text-primary" : "text-foreground"} 
-            hover:text-primary-700 
+            hover:text-primary-500
             transition-colors duration-500
           `}
           >
@@ -70,7 +70,7 @@ export const MenuNavbar = () => {
             href="/contact"
             className={`
             ${pathname === "/contact" ? "text-primary" : "text-foreground"} 
-            hover:text-primary-700 
+            hover:text-primary-500
             transition-colors duration-500
           `}
           >

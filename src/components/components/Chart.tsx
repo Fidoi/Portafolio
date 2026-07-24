@@ -20,70 +20,44 @@ type CircleChartProps = {
   chartData: ChartData[];
 };
 
+// Cada segmento lleva el color de marca de su tecnología, ajustado para que
+// siga siendo legible como dato: el amarillo de Python va oscurecido
+// (#FFD43B puro no contrasta contra el fondo claro) y el azul oficial de
+// Python se descartó porque es casi idéntico al de TypeScript.
+// Next.js es acromático por marca, así que usa el token `foreground`: negro
+// en claro, blanco en oscuro.
+// "Stack principal" son dominios, no tecnologías, así que toma prestado el
+// color de la herramienta que representa cada lado: el cian de React y el
+// verde de Node. Ambos van oscurecidos — el cian original (#61DAFB) no
+// contrasta contra el fondo claro, y el verde se bajó para que no se confunda
+// con el de Django cuando las tres tarjetas están abiertas a la vez.
 const data: CircleChartProps[] = [
   {
     title: "Stack principal",
     categories: ["Frontend", "Backend"],
     chartData: [
-      { name: "Frontend", value: 75, color: "primary-500" },
-      { name: "Backend", value: 25, color: "primary-600" },
+      { name: "Frontend", value: 75, color: "#1F9CBF" },
+      { name: "Backend", value: 25, color: "#4C8C3F" },
     ],
   },
   {
     title: "Lenguajes",
     categories: ["Typescript", "Python"],
     chartData: [
-      { name: "Typescript", value: 90, color: "primary-300" },
-      { name: "Python", value: 10, color: "primary-400" },
+      { name: "Typescript", value: 90, color: "#3178C6" },
+      { name: "Python", value: 10, color: "#B8860B" },
     ],
   },
   {
     title: "Frameworks",
     categories: ["Nextjs", "Nestjs", "Django"],
     chartData: [
-      { name: "Nextjs", value: 70, color: "primary-50" },
-      { name: "Nestjs", value: 20, color: "primary-100" },
-      { name: "Django", value: 10, color: "primary-200" },
+      { name: "Nextjs", value: 70, color: "hsl(var(--heroui-foreground))" },
+      { name: "Nestjs", value: 20, color: "#E0234E" },
+      { name: "Django", value: 10, color: "#44B78B" },
     ],
   },
 ];
-
-const RADIAN = Math.PI / 180;
-
-interface LabelProps {
-  cx: number;
-  cy: number;
-  midAngle: number;
-  innerRadius: number;
-  outerRadius: number;
-  percent: number;
-}
-
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-}: LabelProps) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.001;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor={x > cx ? "start" : "end"}
-      dominantBaseline="central"
-      className="font-bold"
-    >
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
 
 export const Chart = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -212,10 +186,9 @@ const CircleChartCard = React.forwardRef<
                         <div
                           className="h-2 w-2 flex-none rounded-full"
                           style={{
-                            backgroundColor: `hsl(var(--heroui-${
+                            backgroundColor:
                               chartData.find((data) => data.name === category)
-                                ?.color ?? "default"
-                            }))`,
+                                ?.color ?? "hsl(var(--heroui-default))",
                           }}
                         />
                         <div className="flex w-full items-center justify-between gap-x-2 pr-1 text-xs text-default-700">
@@ -237,38 +210,40 @@ const CircleChartCard = React.forwardRef<
               animationEasing="ease"
               data={chartData}
               dataKey="value"
-              innerRadius="48%"
+              innerRadius="55%"
               nameKey="name"
-              paddingAngle={-20}
+              paddingAngle={2}
               strokeWidth={0}
-              labelLine
-              label={renderCustomizedLabel}
             >
               {chartData.map((_, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={`hsl(var(--heroui-${_.color}))`}
-                />
+                <Cell key={`cell-${index}`} fill={_.color} />
               ))}
             </Pie>
           </PieChart>
         </ResponsiveContainer>
 
         <div className="flex flex-row md:flex-col justify-center gap-4 p-4 text-tiny text-default-500 lg:p-0">
-          {categories.map((category, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <span
-                className="h-5 w-5 rounded-full"
-                style={{
-                  backgroundColor: `hsl(var(--heroui-${
-                    chartData.find((data) => data.name === category)?.color ??
-                    "default"
-                  }))`,
-                }}
-              />
-              <span className="font-bold capitalize">{category}</span>
-            </div>
-          ))}
+          {categories.map((category, index) => {
+            const item = chartData.find((d) => d.name === category);
+            return (
+              <div key={index} className="flex items-center gap-2">
+                <span
+                  className="h-4 w-4 shrink-0 rounded-full"
+                  style={{
+                    backgroundColor: item?.color ?? "hsl(var(--heroui-default))",
+                  }}
+                />
+                <span className="font-bold capitalize text-default-700">
+                  {category}
+                </span>
+                {item ? (
+                  <span className="font-mono text-default-400">
+                    {item.value}%
+                  </span>
+                ) : null}
+              </div>
+            );
+          })}
         </div>
       </div>
     </Card>

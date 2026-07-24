@@ -10,9 +10,11 @@ export default function LayoutMain({
   return (
     <>
       <Providers>
-        <MenuNavbar />
-        <div className="container mt-0 mx-auto px-4 lg:py-6 z-10 ">
-          {children}
+        <div className="relative z-10 flex min-h-dvh flex-col">
+          <MenuNavbar />
+          <main className="container mx-auto flex-1 px-4 lg:py-6">
+            {children}
+          </main>
         </div>
         <BackgroundParticles />
       </Providers>

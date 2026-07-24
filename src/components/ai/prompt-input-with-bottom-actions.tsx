@@ -33,7 +33,7 @@ export const PromptInputWithBottomActions = ({
           input: "pl-2 pr-10! pb-6 pt-1 text-medium",
         }}
         endContent={
-          <Tooltip showArrow content="Send message">
+          <Tooltip showArrow content="Enviar mensaje">
             <Button
               isIconOnly
               color={!prompt.trim() ? "default" : "primary"}

@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Avatar, Button, Link, ScrollShadow } from "@heroui/react";
-import { getChatResponse } from "@/actions/chat-action";
 import { PromptInputWithBottomActions } from "./prompt-input-with-bottom-actions";
 
 type Message = {
@@ -48,40 +47,7 @@ function LinkifiedText({ text }: { text: string }) {
   );
 }
 
-export const TypewriterText = ({
-  text,
-  onTick,
-}: {
-  text: string;
-  onTick?: () => void;
-}) => {
-  const [shown, setShown] = React.useState("");
-
-  React.useEffect(() => {
-    setShown("");
-    let index = 0;
-
-    const timer = window.setInterval(() => {
-      index += 1;
-      setShown(text.slice(0, index));
-      onTick?.();
-
-      if (index >= text.length) window.clearInterval(timer);
-    }, 12);
-
-    return () => window.clearInterval(timer);
-  }, [text, onTick]);
-
-  return <LinkifiedText text={shown} />;
-};
-
-export const MessageBubble = ({
-  message,
-  onBotTick,
-}: {
-  message: Message;
-  onBotTick?: () => void;
-}) => {
+export const MessageBubble = ({ message }: { message: Message }) => {
   const isUser = message.role === "user";
 
   return (
@@ -99,11 +65,7 @@ export const MessageBubble = ({
         ) : null}
 
         <div className="flex-1">
-          {isUser ? (
-            <p className="whitespace-pre-wrap leading-7">{message.content}</p>
-          ) : (
-            <TypewriterText text={message.content} onTick={onBotTick} />
-          )}
+          <LinkifiedText text={message.content} />
         </div>
       </div>
     </div>
@@ -122,28 +84,33 @@ export const PortfolioAIChat = () => {
   const [loading, setLoading] = React.useState(false);
 
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
-  const bottomRef = React.useRef<HTMLDivElement | null>(null);
+  // El usuario "manda" el scroll: solo autobajamos si ya está cerca del fondo,
+  // para no arrancarle la vista mientras lee mensajes anteriores.
+  const stickToBottom = React.useRef(true);
+
+  const isNearBottom = React.useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return true;
+    return el.scrollHeight - el.scrollTop - el.clientHeight < 120;
+  }, []);
 
   const scrollToBottom = React.useCallback(
     (behavior: ScrollBehavior = "smooth") => {
-      const container = scrollRef.current;
-      if (!container) return;
-
-      container.scrollTo({
-        top: container.scrollHeight,
-        behavior,
-      });
+      const el = scrollRef.current;
+      if (!el) return;
+      el.scrollTo({ top: el.scrollHeight, behavior });
     },
     [],
   );
 
-  React.useLayoutEffect(() => {
-    scrollToBottom("auto");
-  }, [messages, scrollToBottom]);
+  const handleScroll = React.useCallback(() => {
+    stickToBottom.current = isNearBottom();
+  }, [isNearBottom]);
 
-  React.useEffect(() => {
-    if (loading) scrollToBottom("smooth");
-  }, [loading, scrollToBottom]);
+  // Al añadir/crecer mensajes, seguimos el fondo solo si el usuario no subió.
+  React.useLayoutEffect(() => {
+    if (stickToBottom.current) scrollToBottom("auto");
+  }, [messages, scrollToBottom]);
 
   const sendMessage = React.useCallback(
     async (value?: string) => {
@@ -155,38 +122,61 @@ export const PortfolioAIChat = () => {
         role: "user",
         content: text,
       };
+      const assistantId = crypto.randomUUID();
+      const history = [...messages, userMessage];
 
-      const nextMessages = [...messages, userMessage];
-
-      setMessages(nextMessages);
+      // Pinta el mensaje del usuario y una burbuja vacía del asistente que se
+      // irá rellenando conforme llega el stream.
+      stickToBottom.current = true;
+      setMessages([
+        ...history,
+        { id: assistantId, role: "assistant", content: "" },
+      ]);
       setPrompt("");
       setLoading(true);
 
       try {
-        const response = await getChatResponse(nextMessages);
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: history }),
+        });
 
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: crypto.randomUUID(),
-            role: "assistant",
-            content: response,
-          },
-        ]);
+        if (!res.body) throw new Error("sin cuerpo");
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
+          if (!chunk) continue;
+
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === assistantId ? { ...m, content: m.content + chunk } : m,
+            ),
+          );
+          if (stickToBottom.current) scrollToBottom("auto");
+        }
       } catch {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: crypto.randomUUID(),
-            role: "assistant",
-            content: "Error de IA interno.",
-          },
-        ]);
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === assistantId
+              ? {
+                  ...m,
+                  content:
+                    "Uy, algo falló al conectar conmigo 😵 Revisa tu conexión e inténtalo de nuevo.",
+                }
+              : m,
+          ),
+        );
       } finally {
         setLoading(false);
       }
     },
-    [loading, prompt, messages],
+    [loading, prompt, messages, scrollToBottom],
   );
 
   const quickPrompts = [
@@ -196,52 +186,65 @@ export const PortfolioAIChat = () => {
     "Cuéntame más sobre este portafolio",
   ];
 
+  // Las sugerencias son afordancia de arranque: se muestran solo mientras la
+  // conversación no ha empezado (únicamente el saludo inicial).
+  const showQuickPrompts = messages.length <= 1;
+  // La burbuja del asistente en curso está vacía mientras Gemini "piensa".
+  const waitingFirstToken =
+    loading && messages[messages.length - 1]?.content === "";
+
   return (
-    <div className="flex h-dvh w-full flex-col gap-6">
-      <div className="flex flex-col items-center justify-center gap-2 pt-4">
+    // Alto = viewport − navbar (5rem). Evita el doble scroll: dentro solo se
+    // desplaza la lista de mensajes, no la página.
+    <div className="flex h-[calc(100dvh-5rem)] w-full flex-col gap-4 py-4 lg:h-[calc(100dvh-8rem)]">
+      <div className="flex flex-col items-center justify-center gap-2">
         <Avatar size="lg" src="/favicon.ico" />
         <h1 className="text-xl font-medium text-default-700">
           ¡Explora el portafolio conmigo!
         </h1>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {quickPrompts.map((item) => (
-          <Button
-            key={item}
-            size="sm"
-            variant="flat"
-            className="h-auto whitespace-normal py-3 text-left"
-            onPress={() => sendMessage(item)}
-          >
-            {item}
-          </Button>
-        ))}
-      </div>
+      {showQuickPrompts ? (
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {quickPrompts.map((item) => (
+            <Button
+              key={item}
+              size="sm"
+              variant="flat"
+              className="h-auto whitespace-normal py-3 text-left"
+              onPress={() => sendMessage(item)}
+            >
+              {item}
+            </Button>
+          ))}
+        </div>
+      ) : null}
 
       <ScrollShadow
         ref={scrollRef}
-        className="flex flex-1 flex-col gap-3 rounded-2xl border border-default-200 bg-content1 p-4"
+        onScroll={handleScroll}
+        className="flex min-h-0 flex-1 flex-col gap-3 rounded-2xl border border-default-200 bg-content1 p-4"
         hideScrollBar
+        role="log"
+        aria-live="polite"
+        aria-label="Conversación con el asistente"
       >
         {messages.map((message) => (
-          <MessageBubble
-            key={message.id}
-            message={message}
-            onBotTick={scrollToBottom}
-          />
+          <MessageBubble key={message.id} message={message} />
         ))}
 
-        {loading ? (
-          <div className="flex justify-start">
-            <div className="rounded-2xl bg-default-100 px-4 py-3 text-sm text-default-500">
-              Escribiendo...
+        {waitingFirstToken ? (
+          <div className="flex justify-start" aria-hidden>
+            <div className="flex items-center gap-1 rounded-2xl bg-default-100 px-4 py-3">
+              <span className="h-2 w-2 animate-bounce rounded-full bg-default-400 [animation-delay:-0.3s]" />
+              <span className="h-2 w-2 animate-bounce rounded-full bg-default-400 [animation-delay:-0.15s]" />
+              <span className="h-2 w-2 animate-bounce rounded-full bg-default-400" />
             </div>
           </div>
         ) : null}
       </ScrollShadow>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2">
         <PromptInputWithBottomActions
           loading={loading}
           prompt={prompt}

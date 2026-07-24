@@ -1,11 +1,9 @@
-import { getProductByTitle, getProjects } from "@/actions";
-import { SwiperImages, CardsInfo, TitleAnimation } from "@/components";
-import { Divider } from "@heroui/react";
+import { getProductBySlug, getProjects } from "@/actions";
+import { ProjectShowcase, ProjectNav } from "@/components";
 import { notFound } from "next/navigation";
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { slugify } from "@/lib/slug";
 
 import { Metadata, ResolvingMetadata } from "next";
-import Link from "next/link";
 
 interface Props {
   params: Promise<{ title: string }>;
@@ -16,76 +14,81 @@ export async function generateMetadata(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const { title } = await params;
-  const product = await getProductByTitle(title);
+  const { title: slug } = await params;
+  const product = await getProductBySlug(slug);
+
+  if (!product) {
+    return { title: "Proyecto no encontrado" };
+  }
 
   return {
-    title: product?.title ?? "Titulo no encontrado",
-    description: product?.mainInfo.commentary ?? "",
+    title: product.title,
+    description: product.mainInfo.commentary || product.mainInfo.description,
     openGraph: {
-      title: product?.title ?? "Titulo no encontrado",
-      description: product?.mainInfo.commentary ?? "",
-      images: [`${product?.mainImage}`],
+      title: product.title,
+      description: product.mainInfo.commentary || product.mainInfo.description,
+      images: product.mainImage ? [product.mainImage] : [],
     },
   };
 }
 
 export default async function ProjectPage({ params }: Props) {
-  const { title } = await params;
-  const project = await getProductByTitle(title);
+  const { title: slug } = await params;
+  const project = await getProductBySlug(slug);
   const projects = await getProjects();
+
   if (!project) {
     notFound();
   }
+
   const currentIndex = projects.findIndex(
-    (p) => p.title.toLowerCase() === title.toLowerCase(),
+    (p) => slugify(p.title) === slugify(slug),
   );
 
   const previousProject = currentIndex > 0 ? projects[currentIndex - 1] : null;
   const nextProject =
-    currentIndex < projects.length - 1 ? projects[currentIndex + 1] : null;
+    currentIndex >= 0 && currentIndex < projects.length - 1
+      ? projects[currentIndex + 1]
+      : null;
+
+  const screenshots =
+    project.mainInfo?.urlImages?.length > 0
+      ? project.mainInfo.urlImages
+      : project.mainImage
+        ? [project.mainImage]
+        : [];
 
   return (
-    <main className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-4">
-        <div className="w-16">
-          {previousProject ? (
-            <Link
-              href={`/projects/${previousProject.title}`}
-              aria-label="Proyecto anterior"
-              className="inline-flex items-center justify-center rounded-full p-3 bg-primary/20 transition hover:bg-primary-700 "
-            >
-              <FiArrowLeft className="h-3 w-3 sm:h-7 sm:w-7" />
-            </Link>
-          ) : null}
-        </div>
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
+      <ProjectNav
+        previous={
+          previousProject
+            ? {
+                title: previousProject.title,
+                href: `/projects/${slugify(previousProject.title)}`,
+                image: previousProject.mainImage,
+              }
+            : null
+        }
+        next={
+          nextProject
+            ? {
+                title: nextProject.title,
+                href: `/projects/${slugify(nextProject.title)}`,
+                image: nextProject.mainImage,
+              }
+            : null
+        }
+      />
 
-        <TitleAnimation title={project.title} className="text-6xl" />
-
-        <div className="w-16 flex justify-end">
-          {nextProject ? (
-            <Link
-              href={`/projects/${nextProject.title}`}
-              aria-label="Proyecto siguiente"
-              className="inline-flex items-center justify-center rounded-full p-3 bg-primary/20 transition hover:bg-primary-700 "
-            >
-              <FiArrowRight className="h-3 w-3 sm:h-7 sm:w-7" />
-            </Link>
-          ) : null}
-        </div>
-      </div>
-      <Divider />
-      <SwiperImages images={project.mainInfo?.urlImages} />
-      <Divider />
-      <div className="flex justify-center  space-x-4">
-        <CardsInfo
-          title={project.title}
-          description={project.mainInfo.description}
-          links={project.mainInfo.links}
-          language={project.mainInfo.technologies}
-          commentary={project.mainInfo.commentary}
-        />
-      </div>
-    </main>
+      <ProjectShowcase
+        title={project.title}
+        description={project.mainInfo.description}
+        commentary={project.mainInfo.commentary}
+        links={project.mainInfo.links}
+        referenceImages={project.mainInfo.technologies}
+        screenshots={screenshots}
+      />
+    </div>
   );
 }

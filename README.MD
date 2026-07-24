@@ -33,6 +33,18 @@ Quise que este portafolio fuera una experiencia simple, clara e interactiva:
 - **Resend**
 - **PostgreSQL**
 
+## Cómo ejecutar
+
+Este proyecto usa **pnpm** como gestor de paquetes.
+
+```bash
+pnpm install     # instala dependencias
+pnpm dev         # entorno de desarrollo
+pnpm build       # build de producción (incluye prisma generate)
+pnpm start       # sirve el build
+pnpm lint        # ESLint
+```
+
 ## Variables de entorno
 
 Este proyecto necesita estas variables de entorno para funcionar correctamente:
@@ -55,6 +67,14 @@ GOOGLE_API_KEY_2="tu_segunda_google_gemini_api_key"
 RESEND_API_KEY="tu_resend_api_key"
 FROM_EMAIL="no-reply@tudominio.com"
 CONTACT_EMAIL="tu_correo_personal@tudominio.com"
+
+# =========================
+# SITE (SEO) / ANALYTICS
+# =========================
+# URL canónica del sitio (metadata, sitemap, OpenGraph). En producción, tu dominio real.
+NEXT_PUBLIC_SITE_URL="https://tudominio.com"
+# ID de Google Analytics (opcional).
+NEXT_PUBLIC_GA_ID="G-XXXXXXXXXX"
 ```
 
 ### Sobre las API keys

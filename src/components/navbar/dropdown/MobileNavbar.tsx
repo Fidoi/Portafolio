@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { FaHome } from "react-icons/fa";
 import { MdWork, MdEmail } from "react-icons/md";
 import { AiFillEye } from "react-icons/ai";
@@ -10,7 +10,6 @@ import { Button } from "@heroui/react";
 
 export const MobileNavbar = () => {
   const pathname = usePathname();
-  const router = useRouter();
 
   return (
     <Dropdown backdrop="blur" placement="bottom end">
@@ -57,7 +56,7 @@ export const MobileNavbar = () => {
           href="/contact"
           startContent={<MdEmail />}
           className={
-            pathname === "/contact" ? "text-warning" : "text-foreground"
+            pathname === "/contact" ? "text-primary" : "text-foreground"
           }
         >
           Contacto

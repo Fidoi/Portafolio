@@ -11,17 +11,19 @@ const getThemeFromDOM = (): "light" | "dark" => {
   return document.documentElement.classList.contains("dark") ? "dark" : "light";
 };
 
-// Colores según el tema (ajustados para modo claro)
+// Colores de marca (violeta). Los puntos son más luminosos que los enlaces
+// para que los nodos destaquen sobre la telaraña, y ambos contrastan con el
+// fondo de cada tema (antes en dark los puntos eran casi invisibles).
 const getParticleColor = (theme: "light" | "dark") =>
-  theme === "dark" ? "#1a1a1a" : "#9353d3";
+  theme === "dark" ? "#A78BFA" : "#7C3AED";
 const getLinkColor = (theme: "light" | "dark") =>
-  theme === "dark" ? "#FFFFFF" : "#1a1a1a";
+  theme === "dark" ? "#8B5CF6" : "#C4B5FD";
 const getStrokeColor = (theme: "light" | "dark") =>
-  theme === "dark" ? "#FFFFFF" : "#9353d3";
+  theme === "dark" ? "#8B5CF6" : "#7C3AED";
 
 export const BackgroundParticles = () => {
   const [theme, setTheme] = useState<"light" | "dark">("light");
-  const [particleColor, setParticleColor] = useState("#9353d3");
+  const [particleColor, setParticleColor] = useState("#7C3AED");
 
   // Efecto inicial y observador de cambios en la clase 'dark'
   useEffect(() => {
@@ -51,7 +53,7 @@ export const BackgroundParticles = () => {
     background: { color: { value: "transparent" } },
     fullScreen: { enable: true, zIndex: -10 },
     detectRetina: true,
-    fpsLimit: 240,
+    fpsLimit: 60,
     interactivity: {
       detectsOn: "window",
       events: {

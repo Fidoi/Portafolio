@@ -2,15 +2,14 @@ export * from "./ui/row-steps";
 export * from "./ui/InputForm";
 
 export * from "./ui/titles/titleAnimation";
-export * from "./ui/titles/Title";
 export * from "./ui/titles/TypeAnimation";
 
 export * from "./navbar/MenuNavbar";
 export * from "./navbar/image/ImageAudio";
 
 export * from "./sections/projects/Cards";
-export * from "./sections/projects/CardsInfo";
-export * from "./sections/projects/Swiper-Images";
+export * from "./sections/projects/ProjectShowcase";
+export * from "./sections/projects/ProjectNav";
 
 export * from "./components/ButtonDownload";
 export * from "./components/ImageManager";
